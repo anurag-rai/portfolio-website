@@ -83,19 +83,9 @@ The site is a single-page Astro application that outputs fully static HTML at bu
 └── tests/                        # Playwright E2E tests (see CONTRIBUTING.md)
 ```
 
-## Configuration
-
-Configuration is split into two files under `src/config/`.
-
-### `src/config/site.ts` -- Personal Data
-
-Contains all personal/content data that you would change when forking this for your own portfolio: name, job title, email address, social media URLs, navigation link labels, bio, skills, and timezone. Components import from this file rather than hardcoding values.
-
-### `src/config/theme.ts` -- Animation and Interaction Tuning
-
-Contains animation timings, scroll behavior parameters, cursor settings, and other visual tuning values. This is where you adjust how the site feels without touching component code. Examples include Lenis scroll duration, GSAP stagger delays, preloader minimum display time, and cursor hover scale factors.
-
 ## Design System
+
+All personal data (name, email, social links, bio, skills, timezone) lives in `src/config/site.ts`. Animation and interaction tuning (scroll duration, stagger delays, cursor sizes, preloader timing) lives in `src/config/theme.ts`. Components import from these files rather than hardcoding values.
 
 ### Color Tokens
 
@@ -160,44 +150,6 @@ Font stack: `'Manrope', system-ui, sans-serif`.
 | `CustomCursor`   | Creates a dot and circle that follow the mouse. Only activates on `pointer: fine` devices. Scales up on hover over links, buttons, and project cards. Hides the native cursor.                                             | `src/scripts/cursor.ts`                          |
 | `ScrollProgress` | A 3px-high fixed bar at the top of the viewport with `--gradient-earth` background. Width is scrubbed from 0% to 100% via ScrollTrigger as the user scrolls.                                                               | ScrollTrigger scrub                              |
 
-## Customizing Content
-
-To use this as your own portfolio:
-
-1. **Update personal data** in `src/config/site.ts` -- your name, job title, email, social links, bio, skills, and timezone.
-
-2. **Replace experience entries** in `src/data/experience.ts`. Each entry follows the `ExperienceEntry` interface:
-
-   ```ts
-   {
-     role: "Your Job Title",
-     company: "Company Name",
-     startDate: "2023-05",        // YYYY-MM format
-     endDate: null,                // null for "Present"
-     description: "What you did.",
-     technologies: ["TypeScript", "React"],
-   }
-   ```
-
-3. **Replace project entries** in `src/data/projects.ts`. Each entry follows the `ProjectEntry` interface:
-
-   ```ts
-   {
-     title: "Project Name",
-     description: "What it does.",
-     image: "/images/project-1.jpg",
-     technologies: ["TypeScript", "Node.js"],
-     liveUrl: "https://example.com",    // optional
-     repoUrl: "https://github.com/...", // optional
-   }
-   ```
-
-4. **Add project images** to `public/images/`. The `image` field in each project entry should reference the path relative to `public/`.
-
-5. **Replace the photo placeholder** in `About.astro` with an actual `<img>` tag or remove it.
-
-6. **Update meta tags** -- the `Layout.astro` component accepts `title` and `description` props. Defaults come from `src/config/site.ts`.
-
 ## Accessibility
 
 - **`prefers-reduced-motion`** -- All animations, transitions, and smooth scroll are disabled when the user's OS setting requests reduced motion.
@@ -207,39 +159,6 @@ To use this as your own portfolio:
 - **Keyboard navigation** -- All interactive elements are focusable with visible focus rings. The mobile menu closes on Escape.
 - **ARIA labels** -- Character-split text preserves the original string in `aria-label`. Social icons and the hamburger button have descriptive labels.
 - **External link security** -- All `target="_blank"` links include `rel="noopener noreferrer"`.
-
-## Performance
-
-- **Static output** -- Astro builds to fully static HTML/CSS/JS. No server runtime.
-- **Three.js lazy-loading** -- Loaded via dynamic `import()` only after a WebGL check. Never loaded if WebGL is unavailable.
-- **Pixel ratio capping** -- The Three.js renderer caps `devicePixelRatio` at 2.
-- **Font loading** -- Manrope loaded with `display=swap` and `<link rel="preconnect">`.
-- **Scroll animation efficiency** -- Animations reverse when scrolled away rather than accumulating.
-- **Custom cursor guard** -- Only initializes on `pointer: fine` devices.
-
-## Deployment
-
-The site builds to static files in `dist/` and works with any static hosting provider.
-
-```bash
-npm run build
-```
-
-### Vercel
-
-Connect the repository in the Vercel dashboard. Astro is auto-detected.
-
-### Netlify
-
-| Setting           | Value                                                  |
-| ----------------- | ------------------------------------------------------ |
-| Build command     | `npm run build`                                        |
-| Publish directory | `dist`                                                 |
-| Node version      | `22` (set in environment variables or `.node-version`) |
-
-### Other Providers
-
-Any provider that can run `npm run build` and serve the `dist/` directory will work (Cloudflare Pages, GitHub Pages, AWS S3 + CloudFront, etc.).
 
 ## Design Decisions
 
