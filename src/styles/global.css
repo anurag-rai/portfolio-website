@@ -35,6 +35,12 @@
     box-sizing: border-box;
   }
 
+  html,
+  body {
+    overflow-x: hidden;
+    overscroll-behavior-x: none;
+  }
+
   html {
     scroll-behavior: smooth;
   }
@@ -44,7 +50,6 @@
     color: var(--text-primary);
     font-family: "Manrope", system-ui, sans-serif;
     font-weight: 400;
-    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
