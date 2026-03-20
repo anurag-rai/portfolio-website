@@ -1,0 +1,106 @@
+---
+import HeroScene from "./HeroScene.astro";
+import { siteConfig } from "../config/site";
+---
+
+<section
+  id="hero"
+  class="relative flex h-[100vh] h-[100dvh] flex-col items-center justify-center overflow-hidden"
+  style="background: radial-gradient(circle at 50% 50%, var(--surface), var(--bg) 70%);"
+>
+  <div class="absolute inset-0">
+    <HeroScene />
+  </div>
+
+  <div class="relative z-10 text-center px-6">
+    <h1
+      id="hero-title"
+      class="text-[clamp(2.5rem,6vw,5rem)] font-[800] tracking-[-2px] text-[var(--text-primary)]"
+    >
+      {siteConfig.name.toUpperCase()}
+    </h1>
+    <p
+      id="hero-subtitle"
+      class="mt-3 text-[clamp(0.75rem,1.5vw,0.875rem)] font-[300] tracking-[3px] uppercase text-[var(--text-muted)]"
+    >
+      {siteConfig.title}
+    </p>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div
+    id="scroll-indicator"
+    class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-0"
+  >
+    <span class="text-[0.6875rem] font-[300] tracking-[2px] uppercase text-[var(--text-dim)]">Scroll</span>
+    <div class="h-6 w-px bg-[var(--text-dim)] animate-pulse"></div>
+  </div>
+</section>
+
+<script>
+  import { gsap } from "gsap";
+
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function animateHero() {
+    if (prefersReducedMotion) {
+      document.querySelectorAll("#hero-title span, #hero-subtitle span").forEach((s) => {
+        (s as HTMLElement).style.opacity = "1";
+        (s as HTMLElement).style.transform = "none";
+      });
+      const indicator = document.getElementById("scroll-indicator");
+      if (indicator) indicator.style.opacity = "1";
+      return;
+    }
+
+    const title = document.getElementById("hero-title");
+    const subtitle = document.getElementById("hero-subtitle");
+
+    [title, subtitle].forEach((el) => {
+      if (!el) return;
+      const text = el.textContent || "";
+      el.innerHTML = "";
+      el.setAttribute("aria-label", text);
+
+      text.split("").forEach((char) => {
+        const span = document.createElement("span");
+        span.textContent = char === " " ? "\u00A0" : char;
+        span.style.display = "inline-block";
+        span.style.opacity = "0";
+        span.style.transform = "translateY(40px)";
+        span.setAttribute("aria-hidden", "true");
+        el.appendChild(span);
+      });
+    });
+
+    const tl = gsap.timeline();
+
+    tl.to("#hero-title span", {
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      stagger: 0.03,
+      ease: "power2.out",
+    });
+
+    tl.to(
+      "#hero-subtitle span",
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        stagger: 0.02,
+        ease: "power2.out",
+      },
+      "-=0.3"
+    );
+
+    tl.to(
+      "#scroll-indicator",
+      { opacity: 1, duration: 0.8, ease: "power2.out" },
+      "-=0.2"
+    );
+  }
+
+  window.addEventListener("preloader-complete", animateHero);
+</script>

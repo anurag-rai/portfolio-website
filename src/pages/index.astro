@@ -1,0 +1,30 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Preloader from '../components/Preloader.astro';
+import ScrollProgress from '../components/ScrollProgress.astro';
+import CustomCursor from '../components/CustomCursor.astro';
+import Hero from '../components/Hero.astro';
+import Navbar from '../components/Navbar.astro';
+import MobileMenu from '../components/MobileMenu.astro';
+import About from '../components/About.astro';
+import Experience from '../components/Experience.astro';
+import Projects from '../components/Projects.astro';
+import Contact from '../components/Contact.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout>
+  <Preloader />
+  <ScrollProgress />
+  <CustomCursor />
+  <Navbar />
+  <MobileMenu />
+  <main id="main-content">
+    <Hero />
+    <About />
+    <Experience />
+    <Projects />
+    <Contact />
+  </main>
+  <Footer />
+</Layout>

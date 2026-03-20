@@ -1,0 +1,28 @@
+---
+import { formatDate, calcDuration, type ExperienceEntry } from "../data/experience";
+interface Props { entry: ExperienceEntry; index: number; }
+const { entry, index } = Astro.props;
+
+const start = formatDate(entry.startDate);
+const end = entry.endDate ? formatDate(entry.endDate) : "Present";
+const duration = calcDuration(entry.startDate, entry.endDate);
+---
+
+<div class="timeline-node relative pl-8 pb-12 last:pb-0" data-index={index}>
+  <div class="timeline-dot absolute left-0 top-1 w-3 h-3 rounded-full border border-[var(--accent-dark)] bg-[var(--surface)] transition-all duration-500"></div>
+  <div class="timeline-content opacity-40 transition-opacity duration-500">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-2">
+      <h3 class="timeline-role text-lg font-[600] text-[var(--text-muted)] transition-colors duration-500">{entry.role}</h3>
+      <span class="text-xs font-[300] tracking-[0.5px] text-[var(--text-dim)]">{start} — {end} <span class="text-[var(--accent-sage)]">({duration})</span></span>
+    </div>
+    <p class="text-sm font-[500] text-[var(--accent)] mb-3">{entry.company}</p>
+    <div class="timeline-details max-h-0 overflow-hidden transition-all duration-500">
+      <p class="text-sm leading-relaxed text-[var(--text-muted)] mb-3">{entry.description}</p>
+      <div class="flex flex-wrap gap-1.5">
+        {entry.technologies.map((tech) => (
+          <span class="rounded px-2 py-1 text-[0.6875rem] font-[500] bg-[var(--accent-dark)] text-[var(--text-primary)]">{tech}</span>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>

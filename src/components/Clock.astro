@@ -1,0 +1,19 @@
+---
+import { siteConfig } from "../config/site";
+const { timezone, timezoneLabel } = siteConfig;
+---
+
+<span id="live-clock" class="text-xs font-[300] tracking-[0.5px] text-[var(--text-dim)]">
+  --:-- -- {timezoneLabel}
+</span>
+
+<script define:vars={{ timezone, timezoneLabel }}>
+  const clock = document.getElementById("live-clock");
+  function updateClock() {
+    if (!clock) return;
+    const formatted = new Intl.DateTimeFormat("en-US", { timeZone: timezone, hour: "numeric", minute: "2-digit", hour12: true }).format(new Date());
+    clock.textContent = `${formatted} ${timezoneLabel}`;
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+</script>

@@ -1,0 +1,28 @@
+---
+import { projects } from "../data/projects";
+import ProjectCard from "./ProjectCard.astro";
+---
+
+<section id="projects" class="px-6 py-24 lg:px-12 xl:px-24">
+  <div class="mx-auto max-w-5xl">
+    <h2 data-animate class="text-[clamp(1.75rem,4vw,2.5rem)] font-[700] tracking-[-0.5px] text-[var(--text-primary)] mb-12">Projects</h2>
+    {projects.map((project, index) => (<ProjectCard project={project} index={index} />))}
+  </div>
+</section>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  gsap.registerPlugin(ScrollTrigger);
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (!prefersReducedMotion) {
+    document.querySelectorAll(".project-card").forEach((card, i) => {
+      const fromX = i % 2 === 0 ? -60 : 60;
+      gsap.fromTo(card, { opacity: 0, x: fromX }, { opacity: 1, x: 0, duration: 0.8, ease: "power2.out", scrollTrigger: { trigger: card, start: "top 85%", end: "bottom 15%", toggleActions: "restart reverse restart reverse" } });
+    });
+    document.querySelectorAll(".project-image").forEach((img) => {
+      gsap.to(img, { y: -30, ease: "none", scrollTrigger: { trigger: img, start: "top bottom", end: "bottom top", scrub: true } });
+    });
+  }
+</script>

@@ -1,0 +1,16 @@
+<div id="hero-3d-mount" class="absolute inset-0"></div>
+
+<script>
+  const container = document.getElementById("hero-3d-mount");
+
+  if (container) {
+    const canvas = document.createElement("canvas");
+    const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+    if (gl) {
+      // Load Three.js on all screen sizes — shapes scale based on viewport
+      import("../scripts/hero-scene").then(({ initHeroScene }) => {
+        initHeroScene(container);
+      });
+    }
+  }
+</script>

@@ -1,0 +1,76 @@
+---
+import { siteConfig } from "../config/site";
+const { navLinks } = siteConfig;
+---
+
+<header id="navbar" class="fixed top-0 left-0 z-50 w-full -translate-y-full opacity-0">
+  <nav class="flex items-center justify-between px-6 py-4 lg:px-12" style="background: rgba(26, 26, 26, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
+    <a href="#hero" class="nav-scroll text-sm font-[600] text-[var(--text-primary)] hover:text-[var(--accent)] transition-colors duration-300">AR</a>
+    <ul class="hidden md:flex items-center gap-8">
+      {navLinks.map(({ label, href }) => (
+        <li>
+          <a href={href} class="nav-link nav-scroll text-sm font-[400] text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors duration-300" data-section={href.slice(1)}>{label}</a>
+        </li>
+      ))}
+    </ul>
+    <button id="menu-toggle" class="md:hidden flex flex-col items-center justify-center w-10 h-10 gap-1.5 relative z-[70]" aria-label="Toggle menu" aria-expanded="false">
+      <span class="block h-px w-6 bg-[var(--text-primary)] transition-transform duration-300 origin-center" id="burger-top"></span>
+      <span class="block h-px w-6 bg-[var(--text-primary)] transition-opacity duration-300" id="burger-mid"></span>
+      <span class="block h-px w-6 bg-[var(--text-primary)] transition-transform duration-300 origin-center" id="burger-bot"></span>
+    </button>
+  </nav>
+</header>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+  const navbar = document.getElementById("navbar");
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Show/hide navbar based on scroll position relative to hero
+  ScrollTrigger.create({
+    trigger: "#hero",
+    start: "bottom top",
+    onEnter: () => {
+      gsap.to(navbar, { y: 0, opacity: 1, duration: prefersReducedMotion ? 0 : 0.3, ease: "power2.out" });
+    },
+    onLeaveBack: () => {
+      gsap.to(navbar, { y: "-100%", opacity: 0, duration: prefersReducedMotion ? 0 : 0.3, ease: "power2.out" });
+    },
+  });
+
+  // Active section tracking
+  const sections = ["about", "experience", "projects", "contact"];
+  sections.forEach((id) => {
+    ScrollTrigger.create({
+      trigger: `#${id}`,
+      start: "top center",
+      end: "bottom center",
+      onToggle: ({ isActive }) => {
+        const link = document.querySelector(`[data-section="${id}"]`);
+        if (isActive) {
+          document.querySelectorAll(".nav-link").forEach((l) => {
+            (l as HTMLElement).style.color = "";
+          });
+          if (link) (link as HTMLElement).style.color = "var(--accent)";
+        }
+      },
+    });
+  });
+
+  // Smooth scroll on nav link click — use native scrollIntoView as fallback
+  document.querySelectorAll(".nav-scroll").forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const href = (link as HTMLAnchorElement).getAttribute("href");
+      if (!href) return;
+
+      const target = document.querySelector(href);
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth" });
+      }
+    });
+  });
+</script>

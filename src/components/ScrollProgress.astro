@@ -1,0 +1,12 @@
+<div id="scroll-progress" class="fixed top-0 left-0 h-[3px] z-[9999] origin-left" style="background: var(--gradient-earth); width: 0%;"></div>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.to("#scroll-progress", {
+    width: "100%", ease: "none",
+    scrollTrigger: { trigger: document.body, start: "top top", end: "bottom bottom", scrub: true },
+  });
+</script>

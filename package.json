@@ -1,0 +1,52 @@
+{
+  "name": "portfolio",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "lint": "eslint . --ext .ts,.js,.mjs",
+    "lint:fix": "eslint . --ext .ts,.js,.mjs --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "spellcheck": "cspell \"src/**/*.ts\" \"src/**/*.astro\" \"tests/**/*.ts\" \"*.md\"",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,js,mjs}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{astro,css,json,md}": [
+      "prettier --write"
+    ],
+    "*.{ts,astro,md}": [
+      "cspell --no-must-find-files"
+    ]
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.2.2",
+    "astro": "^6.0.6",
+    "gsap": "^3.14.2",
+    "lenis": "^1.3.19",
+    "tailwindcss": "^4.2.2",
+    "three": "^0.183.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.58.2",
+    "@types/three": "^0.183.1",
+    "cspell": "^9.7.0",
+    "eslint": "^10.0.3",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "prettier": "^3.8.1",
+    "typescript-eslint": "^8.57.1"
+  }
+}

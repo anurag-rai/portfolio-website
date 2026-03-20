@@ -1,0 +1,63 @@
+---
+import { experiences } from "../data/experience";
+import TimelineNode from "./TimelineNode.astro";
+---
+
+<section id="experience" class="px-6 py-24 lg:px-12 xl:px-24">
+  <div class="mx-auto max-w-5xl">
+    <h2 data-animate class="text-[clamp(1.75rem,4vw,2.5rem)] font-[700] tracking-[-0.5px] text-[var(--text-primary)] mb-12">Experience</h2>
+    <div class="relative ml-1.5">
+      <div class="absolute left-[5px] top-0 bottom-0 w-px bg-[var(--border)]"></div>
+      <div id="timeline-progress" class="absolute left-[5px] top-0 w-px bg-[var(--accent)] origin-top" style="height: 0%;"></div>
+      {experiences.map((entry, index) => (<TimelineNode entry={entry} index={index} />))}
+    </div>
+  </div>
+</section>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const nodes = document.querySelectorAll(".timeline-node");
+  const progress = document.getElementById("timeline-progress");
+
+  if (!prefersReducedMotion) {
+    if (progress) {
+      gsap.to(progress, { height: "100%", ease: "none", scrollTrigger: { trigger: "#experience", start: "top center", end: "bottom center", scrub: true } });
+    }
+    nodes.forEach((node) => {
+      ScrollTrigger.create({
+        trigger: node, start: "top 60%", end: "bottom 40%",
+        onEnter: () => activateNode(node), onLeave: () => deactivateNode(node),
+        onEnterBack: () => activateNode(node), onLeaveBack: () => deactivateNode(node),
+      });
+    });
+  } else {
+    nodes.forEach((node) => activateNode(node));
+    if (progress) progress.style.height = "100%";
+  }
+
+  function activateNode(node: Element) {
+    const dot = node.querySelector(".timeline-dot");
+    const content = node.querySelector(".timeline-content");
+    const role = node.querySelector(".timeline-role");
+    const details = node.querySelector(".timeline-details") as HTMLElement;
+    dot?.classList.add("!bg-[var(--accent)]", "!border-[var(--accent)]", "shadow-[0_0_12px_rgba(203,153,126,0.4)]");
+    content?.classList.remove("opacity-40"); content?.classList.add("opacity-100");
+    role?.classList.remove("text-[var(--text-muted)]"); role?.classList.add("!text-[var(--accent-secondary)]");
+    if (details) details.style.maxHeight = details.scrollHeight + "px";
+  }
+
+  function deactivateNode(node: Element) {
+    const dot = node.querySelector(".timeline-dot");
+    const content = node.querySelector(".timeline-content");
+    const role = node.querySelector(".timeline-role");
+    const details = node.querySelector(".timeline-details") as HTMLElement;
+    dot?.classList.remove("!bg-[var(--accent)]", "!border-[var(--accent)]", "shadow-[0_0_12px_rgba(203,153,126,0.4)]");
+    content?.classList.add("opacity-40"); content?.classList.remove("opacity-100");
+    role?.classList.add("text-[var(--text-muted)]"); role?.classList.remove("!text-[var(--accent-secondary)]");
+    if (details) details.style.maxHeight = "0";
+  }
+</script>
