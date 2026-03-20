@@ -34,6 +34,33 @@ test.describe("Responsive Layout", () => {
     }
   });
 
+  // Regression: horizontal swipe on iOS revealed blank black space to the right.
+  // Fix: overflow-x: hidden + overscroll-behavior-x: none on html/body,
+  // plus overflow-hidden on the Projects section (GSAP slide-in source).
+  test("no horizontal scroll at any scroll position", async ({ page }) => {
+    const positions = [
+      0, // top
+      0.25, // quarter
+      0.5, // middle
+      0.75, // three quarters
+      1, // bottom
+    ];
+
+    for (const ratio of positions) {
+      await page.evaluate(
+        (r) => window.scrollTo(0, (document.body.scrollHeight - window.innerHeight) * r),
+        ratio,
+      );
+      await page.waitForTimeout(300);
+
+      const canScrollHorizontally = await page.evaluate(() => {
+        return document.documentElement.scrollWidth > document.documentElement.clientWidth;
+      });
+
+      expect(canScrollHorizontally, `horizontal overflow at scroll ratio ${ratio}`).toBe(false);
+    }
+  });
+
   test("desktop nav is hidden on mobile, visible on desktop", async ({ page }) => {
     const mobile = await isMobileViewport(page);
     await page.evaluate(() => window.scrollTo(0, window.innerHeight + 200));
