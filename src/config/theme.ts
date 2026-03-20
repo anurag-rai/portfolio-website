@@ -15,7 +15,7 @@ export const theme = {
   /** Preloader timing */
   preloader: {
     /** Minimum display time in ms (prevents flash on fast connections) */
-    minDurationMs: 2000,
+    minDurationMs: 3500,
     /** Fallback timeout for Three.js scene in ms */
     sceneFallbackMs: 5000,
     /** Lerp speed for normal progress tracking */
