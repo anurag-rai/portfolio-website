@@ -1,10 +1,23 @@
-<div id="preloader" class="fixed inset-0 z-[9999] flex items-center justify-center bg-[var(--bg)]">
-  <span
-    id="preloader-counter"
-    class="text-[clamp(3rem,8vw,6rem)] font-[800] tracking-[-2px] text-[var(--text-primary)]"
-  >
-    0
-  </span>
+<div id="preloader" class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[var(--bg)]">
+  <svg id="preloader-shape" width="180" height="180" viewBox="0 0 180 180" class="mb-6">
+    <defs>
+      <linearGradient id="preloader-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#cb997e"/>
+        <stop offset="50%" stop-color="#ddbea9"/>
+        <stop offset="100%" stop-color="#6b705c"/>
+      </linearGradient>
+    </defs>
+    <g id="preloader-edges"></g>
+    <g id="preloader-verts"></g>
+  </svg>
+  <div class="flex items-baseline gap-1">
+    <span
+      id="preloader-counter"
+      class="text-[clamp(1.5rem,4vw,2.5rem)] font-[800] tracking-[-1px] text-[var(--text-primary)]"
+    >0</span>
+    <span class="text-[clamp(0.875rem,2vw,1.25rem)] font-[300] text-[var(--text-dim)]">%</span>
+  </div>
+  <span class="text-[0.6875rem] font-[300] tracking-[3px] uppercase text-[var(--text-dim)] mt-2">Loading</span>
 </div>
 
 <script>
@@ -12,17 +25,113 @@
 
   const preloader = document.getElementById("preloader");
   const counter = document.getElementById("preloader-counter");
+  const edgesGroup = document.getElementById("preloader-edges");
+  const vertsGroup = document.getElementById("preloader-verts");
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   if (prefersReducedMotion) {
     preloader?.remove();
     window.dispatchEvent(new CustomEvent("preloader-complete"));
   } else {
-    // Track real asset loading progress
+    // --- Icosahedron 2D projection ---
+    const verts: [number, number][] = [];
+    // Top vertex
+    verts.push([90, 15]);
+    // Upper ring (5 vertices)
+    for (let i = 0; i < 5; i++) {
+      const a = (i / 5) * Math.PI * 2 - Math.PI / 2;
+      verts.push([90 + Math.cos(a) * 58, 55 + Math.sin(a) * 32]);
+    }
+    // Lower ring (5 vertices)
+    for (let i = 0; i < 5; i++) {
+      const a = (i / 5) * Math.PI * 2 - Math.PI / 2 + Math.PI / 5;
+      verts.push([90 + Math.cos(a) * 58, 108 + Math.sin(a) * 32]);
+    }
+    // Bottom vertex
+    verts.push([90, 148]);
+
+    const edges: [number, number][] = [
+      // Top to upper ring
+      [0,1],[0,2],[0,3],[0,4],[0,5],
+      // Upper ring
+      [1,2],[2,3],[3,4],[4,5],[5,1],
+      // Upper to lower ring (zigzag)
+      [1,6],[2,6],[2,7],[3,7],[3,8],[4,8],[4,9],[5,9],[5,10],[1,10],
+      // Lower ring
+      [6,7],[7,8],[8,9],[9,10],[10,6],
+      // Lower ring to bottom
+      [6,11],[7,11],[8,11],[9,11],[10,11],
+    ];
+
+    const colors = ['#cb997e', '#ddbea9', '#ffe8d6', '#b7b7a4', '#a5a58d', '#6b705c'];
+    const drawnEdges: SVGLineElement[] = [];
+    const drawnVerts = new Set<number>();
+    let lastEdgeCount = 0;
+
+    function drawEdgesUpTo(count: number) {
+      if (!edgesGroup || !vertsGroup) return;
+      const newCount = Math.floor(count);
+      if (newCount <= lastEdgeCount) return;
+
+      for (let i = lastEdgeCount; i < newCount && i < edges.length; i++) {
+        const [a, b] = edges[i];
+        const colorIdx = Math.floor((i / edges.length) * (colors.length - 1));
+
+        // Create the line
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', verts[a][0].toString());
+        line.setAttribute('y1', verts[a][1].toString());
+        // Start at vertex A (line will animate to vertex B)
+        line.setAttribute('x2', verts[a][0].toString());
+        line.setAttribute('y2', verts[a][1].toString());
+        line.setAttribute('stroke', colors[colorIdx]);
+        line.setAttribute('stroke-width', '1.5');
+        line.setAttribute('opacity', '0.6');
+        edgesGroup.appendChild(line);
+        drawnEdges.push(line);
+
+        // Animate the line drawing from A to B
+        gsap.to(line, {
+          attr: { x2: verts[b][0], y2: verts[b][1] },
+          duration: 0.15,
+          ease: "power2.out",
+        });
+
+        // Add vertex dots with a pop-in
+        [a, b].forEach(v => {
+          if (!drawnVerts.has(v)) {
+            drawnVerts.add(v);
+            const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            dot.setAttribute('cx', verts[v][0].toString());
+            dot.setAttribute('cy', verts[v][1].toString());
+            dot.setAttribute('r', '0');
+            dot.setAttribute('fill', '#cb997e');
+            dot.setAttribute('opacity', '0.9');
+            vertsGroup.appendChild(dot);
+
+            gsap.to(dot, {
+              attr: { r: 2.5 },
+              duration: 0.2,
+              ease: "back.out(3)",
+            });
+          }
+        });
+
+        // Briefly brighten the newest edge then fade to normal
+        gsap.fromTo(line,
+          { opacity: 1, attr: { 'stroke-width': 2.5 } },
+          { opacity: 0.5, attr: { 'stroke-width': 1.5 }, duration: 0.4, delay: 0.15 }
+        );
+      }
+
+      lastEdgeCount = newCount;
+    }
+
+    // --- Asset tracking (unchanged logic) ---
     const assets: Array<{ name: string; loaded: boolean }> = [];
     let progress = 0;
     let displayProgress = 0;
-    const MIN_DURATION_MS = 2000; // minimum time to show preloader
+    const MIN_DURATION_MS = 2000;
     const startTime = performance.now();
 
     function registerAsset(name: string): () => void {
@@ -39,76 +148,68 @@
       progress = assets.length > 0 ? (loaded / assets.length) * 100 : 100;
     }
 
-    // --- Register real assets to track ---
-
-    // 1. Manrope font
+    // 1. Fonts
     const fontDone = registerAsset("font");
     if (document.fonts) {
       document.fonts.ready.then(fontDone);
     } else {
-      fontDone(); // fallback: mark done immediately
+      fontDone();
     }
 
-    // 2. All images on the page
+    // 2. Images
     const images = document.querySelectorAll("img");
     if (images.length === 0) {
-      // No images yet, register a placeholder that completes instantly
       registerAsset("images")();
     } else {
       images.forEach((img, i) => {
         const done = registerAsset(`image-${i}`);
-        if (img.complete) {
-          done();
-        } else {
+        if (img.complete) { done(); }
+        else {
           img.addEventListener("load", done);
-          img.addEventListener("error", done); // don't block on broken images
+          img.addEventListener("error", done);
         }
       });
     }
 
-    // 3. Window full load (scripts, stylesheets, etc.)
+    // 3. Window load
     const windowDone = registerAsset("window");
-    if (document.readyState === "complete") {
-      windowDone();
-    } else {
-      window.addEventListener("load", windowDone);
-    }
+    if (document.readyState === "complete") { windowDone(); }
+    else { window.addEventListener("load", windowDone); }
 
-    // 4. Three.js scene (listen for custom event from HeroScene)
+    // 4. Three.js scene
     const threeDone = registerAsset("three-scene");
     window.addEventListener("hero-scene-ready", () => threeDone());
-    // Timeout fallback: if Three.js doesn't load in 5s, don't block
     setTimeout(threeDone, 5000);
 
-    // --- Animate counter to match real progress ---
+    // --- Animate counter + shape ---
     let readyToFinish = false;
 
     function animateCounter() {
       const elapsed = performance.now() - startTime;
-      const minProgress = Math.min((elapsed / MIN_DURATION_MS) * 90, 90); // ramp to 90% over min duration
-
-      // Target is the higher of real progress or time-based minimum
+      const minProgress = Math.min((elapsed / MIN_DURATION_MS) * 90, 90);
       const target = Math.max(progress, minProgress);
 
-      // Once all assets loaded + min time elapsed, race to 100 fast
       if (progress >= 100 && elapsed >= MIN_DURATION_MS) {
         readyToFinish = true;
       }
 
       if (readyToFinish) {
-        // Fast lerp to 100, then finish
         displayProgress += (100 - displayProgress) * 0.25;
         if (counter) counter.textContent = Math.round(displayProgress).toString();
 
+        // Draw edges proportional to progress
+        drawEdgesUpTo((displayProgress / 100) * edges.length);
+
         if (displayProgress > 99.5) {
           if (counter) counter.textContent = "100";
+          drawEdgesUpTo(edges.length);
           finishPreloader();
           return;
         }
       } else {
-        // Normal smooth approach
         displayProgress += (target - displayProgress) * 0.08;
         if (counter) counter.textContent = Math.round(displayProgress).toString();
+        drawEdgesUpTo((displayProgress / 100) * edges.length);
       }
 
       requestAnimationFrame(animateCounter);

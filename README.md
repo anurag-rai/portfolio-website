@@ -130,11 +130,24 @@ Font stack: `'Manrope', system-ui, sans-serif`.
 
 **`data-split`** -- Add alongside `data-animate` for character-level split text reveal. Each character gets its own `<span>` with staggered opacity and y-position animation. The original text is preserved in an `aria-label` for accessibility.
 
+### Progress Indicators (`src/components/design-system/`)
+
+Reusable progress visualization components using the earthy gradient palette. Not all are actively used -- they are part of the design system for future use.
+
+| Component         | Description                                                                                            | Status    |
+| ----------------- | ------------------------------------------------------------------------------------------------------ | --------- |
+| `Preloader`       | Icosahedron that draws itself edge by edge. Each edge animates from vertex to vertex with a flash.     | In use    |
+| `ProgressRing`    | SVG circular ring with gradient stroke. Fill proportional to `progress` prop. Slot for center content. | Available |
+| `WireframeSphere` | Canvas wireframe sphere that builds latitude/longitude lines proportional to `progress`.               | Available |
+| `OrbitalDots`    | SVG dots that appear in a circular orbit. Earthy gradient distributed across dots. Optional rotation.   | Available |
+
+Props shared across all three: `progress` (0-100), `size` (pixels). See JSDoc in each file for full API.
+
 ## Components
 
 | Component        | Purpose                                                                                                                                                                                                                    | Data Source                                      |
 | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| `Preloader`      | Tracks real asset loading (fonts, images, window load, Three.js scene) and displays an animated 0-100 counter. Wipes upward on completion and dispatches `preloader-complete` event.                                       | Internal asset tracking                          |
+| `Preloader`      | Tracks real asset loading and displays an icosahedron that draws itself edge by edge as progress advances. Counter shows percentage. Wipes upward on completion and dispatches `preloader-complete` event.                  | Internal asset tracking                          |
 | `Hero`           | Full-viewport intro with character-stagger animation on name and subtitle. Waits for `preloader-complete` before animating. Includes scroll indicator.                                                                     | `src/config/site.ts`                             |
 | `HeroScene`      | Mounts a `<canvas>` for Three.js. Checks WebGL support before lazy-importing `hero-scene.ts`. Dispatches `hero-scene-ready` when loaded.                                                                                   | `src/scripts/hero-scene.ts`                      |
 | `Navbar`         | Fixed header that appears after scrolling past the hero (ScrollTrigger). Tracks active section and highlights the corresponding link. Smooth scrolls on click.                                                             | `src/config/site.ts`                             |

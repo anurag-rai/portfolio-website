@@ -1,0 +1,53 @@
+---
+/**
+ * Circular progress ring with gradient stroke.
+ * Renders an SVG circle that fills proportionally to the `progress` value.
+ *
+ * @example
+ * <ProgressRing progress={75} size={160} />
+ */
+interface Props {
+  /** Progress value from 0 to 100 */
+  progress?: number;
+  /** Diameter in pixels */
+  size?: number;
+}
+
+const { progress = 0, size = 160 } = Astro.props;
+const radius = (size / 2) - 10;
+const circumference = 2 * Math.PI * radius;
+const offset = circumference * (1 - progress / 100);
+---
+
+<svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+  <defs>
+    <linearGradient id="progress-ring-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="var(--accent)" />
+      <stop offset="50%" stop-color="var(--accent-secondary)" />
+      <stop offset="100%" stop-color="var(--accent-dark)" />
+    </linearGradient>
+  </defs>
+  <!-- Track -->
+  <circle
+    cx={size / 2} cy={size / 2} r={radius}
+    fill="none" stroke="var(--surface)" stroke-width="2"
+  />
+  <!-- Progress arc -->
+  <circle
+    class="progress-ring-fill"
+    cx={size / 2} cy={size / 2} r={radius}
+    fill="none"
+    stroke="url(#progress-ring-grad)"
+    stroke-width="3"
+    stroke-linecap="round"
+    stroke-dasharray={circumference}
+    stroke-dashoffset={offset}
+    transform={`rotate(-90 ${size / 2} ${size / 2})`}
+  />
+  <!-- Centered slot for counter text -->
+  <foreignObject x="0" y="0" width={size} height={size}>
+    <div style="display:flex;align-items:center;justify-content:center;height:100%;">
+      <slot />
+    </div>
+  </foreignObject>
+</svg>

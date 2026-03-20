@@ -1,0 +1,72 @@
+---
+/**
+ * Wireframe sphere that builds itself ring by ring.
+ * Draws latitude and longitude lines proportional to `progress`.
+ * Uses canvas for smooth rendering.
+ *
+ * @example
+ * <WireframeSphere progress={50} size={180} />
+ */
+interface Props {
+  /** Progress value from 0 to 100 */
+  progress?: number;
+  /** Canvas size in pixels */
+  size?: number;
+  /** Unique ID (required if multiple instances on same page) */
+  id?: string;
+}
+
+const { progress = 0, size = 180, id = "wireframe-sphere" } = Astro.props;
+---
+
+<canvas id={id} width={size} height={size} data-progress={progress}></canvas>
+
+<script>
+  document.querySelectorAll<HTMLCanvasElement>("canvas[id^='wireframe-sphere']").forEach((canvas) => {
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const size = canvas.width;
+    const cx = size / 2;
+    const cy = size / 2;
+    const r = size * 0.39;
+    const progress = Number(canvas.dataset.progress || 0);
+    const totalRings = 12;
+    const totalLongs = 8;
+    const colors = ["#cb997e", "#ddbea9", "#ffe8d6", "#b7b7a4", "#a5a58d", "#6b705c"];
+
+    const t = progress / 100;
+
+    // Latitude lines
+    const activeRings = Math.floor(t * totalRings);
+    for (let i = 0; i <= activeRings; i++) {
+      const lat = (i / totalRings) * Math.PI;
+      const ringR = Math.sin(lat) * r;
+      const ringY = cy - Math.cos(lat) * r;
+      const colorIdx = Math.floor((i / totalRings) * (colors.length - 1));
+      ctx.beginPath();
+      ctx.ellipse(cx, ringY, ringR, ringR * 0.3, 0, 0, Math.PI * 2);
+      ctx.strokeStyle = colors[colorIdx];
+      ctx.globalAlpha = 0.4;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+
+    // Longitude lines
+    const activeLongs = Math.floor(t * totalLongs);
+    for (let i = 0; i < activeLongs; i++) {
+      const lon = (i / totalLongs) * Math.PI;
+      ctx.beginPath();
+      for (let j = 0; j <= 40; j++) {
+        const lat = (j / 40) * Math.PI;
+        const x = cx + Math.sin(lat) * Math.cos(lon) * r;
+        const y = cy - Math.cos(lat) * r;
+        j === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = colors[i % colors.length];
+      ctx.globalAlpha = 0.3;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+  });
+</script>

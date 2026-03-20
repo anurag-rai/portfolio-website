@@ -1,0 +1,59 @@
+---
+/**
+ * Orbital dots progress indicator.
+ * Dots appear one by one in a circular orbit, with earthy gradient colors
+ * distributed across the ring. Dots rotate continuously when animated.
+ *
+ * @example
+ * <OrbitalDots progress={60} size={180} animated />
+ */
+interface Props {
+  /** Progress value from 0 to 100 */
+  progress?: number;
+  /** SVG size in pixels */
+  size?: number;
+  /** Enable continuous rotation animation */
+  animated?: boolean;
+  /** Unique ID (required if multiple instances on same page) */
+  id?: string;
+}
+
+const { progress = 0, size = 180, animated = false, id = "orbital-dots" } = Astro.props;
+const totalDots = 24;
+const radius = (size / 2) - 20;
+const center = size / 2;
+const activeDots = Math.floor((progress / 100) * totalDots);
+const colors = ["#cb997e", "#ddbea9", "#ffe8d6", "#b7b7a4", "#a5a58d", "#6b705c"];
+---
+
+<svg id={id} width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+  <g class:list={["orbital-dots-group", { "orbital-animate": animated }]}>
+    {Array.from({ length: activeDots }).map((_, i) => {
+      const angle = (i / totalDots) * Math.PI * 2 - Math.PI / 2;
+      const x = center + Math.cos(angle) * radius;
+      const y = center + Math.sin(angle) * radius;
+      const colorIdx = Math.floor((i / totalDots) * colors.length);
+      const opacity = 0.5 + (i / totalDots) * 0.5;
+      return (
+        <circle cx={x} cy={y} r="3" fill={colors[colorIdx]} opacity={opacity} />
+      );
+    })}
+  </g>
+  <!-- Center slot for counter -->
+  <foreignObject x="0" y="0" width={size} height={size}>
+    <div style="display:flex;align-items:center;justify-content:center;height:100%;">
+      <slot />
+    </div>
+  </foreignObject>
+</svg>
+
+<style>
+  @keyframes orbital-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .orbital-animate {
+    transform-origin: center;
+    animation: orbital-spin 8s linear infinite;
+  }
+</style>

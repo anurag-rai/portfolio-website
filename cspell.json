@@ -37,7 +37,9 @@
     "WCAG",
     "trackpad",
     "trackpads",
-    "antiprism"
+    "antiprism",
+    "verts",
+    "overscroll"
   ],
   "ignorePaths": [
     "node_modules",
