@@ -50,11 +50,12 @@ Keep the subject line under 72 characters. Use the imperative mood ("add", not "
 
 ## Pre-commit Hooks
 
-Husky runs the following checks on every commit via lint-staged:
+Husky runs the following checks on every commit:
 
-- **ESLint** -- lints and auto-fixes `.ts`, `.js`, `.mjs` files
+- **TypeScript** -- `tsc --noEmit` on the full project (a change in one file can break types in another)
+- **ESLint** -- lints and auto-fixes staged `.ts`, `.js`, `.mjs` files
 - **Prettier** -- formats all staged files (`.ts`, `.js`, `.astro`, `.css`, `.json`, `.md`)
-- **cspell** -- checks spelling in `.ts`, `.astro`, and `.md` files
+- **cspell** -- checks spelling in staged `.ts`, `.astro`, and `.md` files
 
 If a hook fails, the commit is blocked. Fix the issue and try again.
 
@@ -67,6 +68,7 @@ Always use `npm run <script>` instead of running tools directly with `npx`.
 | `npm run dev`          | Start local dev server at `localhost:4321` |
 | `npm run build`        | Build for production to `dist/`            |
 | `npm run preview`      | Preview the production build locally       |
+| `npm run typecheck`    | Run TypeScript type checking (no emit)     |
 | `npm run lint`         | Run ESLint                                 |
 | `npm run lint:fix`     | Run ESLint with auto-fix                   |
 | `npm run format`       | Format all files with Prettier             |

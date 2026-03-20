@@ -1,4 +1,4 @@
-import { Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
 
 /** Wait for preloader to finish (or not exist) */
 export async function waitForPreloader(page: Page) {

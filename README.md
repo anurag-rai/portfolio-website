@@ -38,19 +38,20 @@ npm run preview  # preview the production build locally
 
 ### Scripts Reference
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start local dev server at `localhost:4321` |
-| `npm run build` | Build for production to `dist/` |
-| `npm run preview` | Preview the production build locally |
-| `npm run lint` | Run ESLint on TypeScript/JS files |
-| `npm run lint:fix` | Run ESLint with auto-fix |
-| `npm run format` | Format all files with Prettier |
-| `npm run format:check` | Check formatting without writing |
-| `npm run spellcheck` | Run cspell on source, test, and markdown files |
-| `npm run test` | Run all Playwright tests (all devices) |
-| `npm run test:headed` | Run tests with a visible browser window |
-| `npm run test:debug` | Run tests in Playwright debug mode (step-through) |
+| Command                | Description                                       |
+| ---------------------- | ------------------------------------------------- |
+| `npm run dev`          | Start local dev server at `localhost:4321`        |
+| `npm run build`        | Build for production to `dist/`                   |
+| `npm run preview`      | Preview the production build locally              |
+| `npm run typecheck`    | Run TypeScript type checking (no emit)            |
+| `npm run lint`         | Run ESLint on TypeScript/JS files                 |
+| `npm run lint:fix`     | Run ESLint with auto-fix                          |
+| `npm run format`       | Format all files with Prettier                    |
+| `npm run format:check` | Check formatting without writing                  |
+| `npm run spellcheck`   | Run cspell on source, test, and markdown files    |
+| `npm run test`         | Run all Playwright tests (all devices)            |
+| `npm run test:headed`  | Run tests with a visible browser window           |
+| `npm run test:debug`   | Run tests in Playwright debug mode (step-through) |
 
 To run a single test file:
 
