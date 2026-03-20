@@ -1,0 +1,13 @@
+msg=$(head -1 "$1")
+
+if ! echo "$msg" | grep -qE '^(feat|fix|chore|docs|test): .+'; then
+  echo ""
+  echo "ERROR: Invalid commit message format."
+  echo ""
+  echo "  Got:      $msg"
+  echo "  Expected: <prefix>: <subject>"
+  echo ""
+  echo "  Allowed prefixes: feat, fix, chore, docs, test"
+  echo ""
+  exit 1
+fi

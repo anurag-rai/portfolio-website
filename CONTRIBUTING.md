@@ -40,32 +40,40 @@ Always use `npm run <script>` instead of running tools directly with `npx`.
 
 ## Commit Convention
 
-This project follows [Conventional Commits](https://www.conventionalcommits.org/). Every commit message must use one of these prefixes:
+This project follows [Conventional Commits](https://www.conventionalcommits.org/). Every commit message must match:
 
-| Prefix      | When to use                                             |
-| ----------- | ------------------------------------------------------- |
-| `feat:`     | New feature or functionality                            |
-| `fix:`      | Bug fix                                                 |
-| `chore:`    | Maintenance, dependency updates, config changes         |
-| `perf:`     | Performance improvement                                 |
-| `refactor:` | Code change that neither fixes a bug nor adds a feature |
-| `docs:`     | Documentation only                                      |
-| `test:`     | Adding or updating tests                                |
-| `style:`    | Formatting, whitespace, semicolons (no logic change)    |
-| `ci:`       | CI/CD configuration changes                             |
+```
+<prefix>: <subject>
+```
 
-Keep the subject line under 72 characters. Use the imperative mood ("add", not "added" or "adds").
+Allowed prefixes:
+
+| Prefix   | When to use                              |
+| -------- | ---------------------------------------- |
+| `feat:`  | New feature or functionality             |
+| `fix:`   | Bug fix                                  |
+| `chore:` | Maintenance, deps, config, refactors, CI |
+| `docs:`  | Documentation only                       |
+| `test:`  | Adding or updating tests                 |
+
+Keep the subject line under 72 characters. Use the imperative mood ("add", not "added" or "adds"). This is enforced by a `commit-msg` hook -- commits with invalid prefixes are rejected.
 
 ## Pre-commit Hooks
 
-Husky runs the following checks on every commit:
+Husky runs the following hooks:
 
-1. **TypeScript** -- `tsc --noEmit` on the full project (a change in one file can break types in another)
+**pre-commit** (before the commit is created):
+
+1. **TypeScript** -- `tsc --noEmit` on the full project
 2. **ESLint** -- lints and auto-fixes staged `.ts`, `.js`, `.mjs` files
-3. **Prettier** -- formats all staged files (`.ts`, `.js`, `.astro`, `.css`, `.json`, `.md`)
+3. **Prettier** -- formats all staged files
 4. **cspell** -- checks spelling in staged `.ts`, `.astro`, and `.md` files
 
-If a hook fails, the commit is blocked. Fix the issue and try again.
+**commit-msg** (validates the commit message):
+
+5. **Prefix check** -- rejects messages that don't start with `feat:`, `fix:`, `chore:`, `docs:`, or `test:`
+
+If any hook fails, the commit is blocked. Fix the issue and try again.
 
 ## Testing
 
