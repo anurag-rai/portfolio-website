@@ -23,8 +23,8 @@ A single-page developer portfolio with cinematic scroll animations, a dark monoc
 ### Install and Run
 
 ```bash
-npm install
-npm run dev
+npm ci           # install exact pinned versions from lock file
+npm run dev      # start dev server at localhost:4321
 ```
 
 Open [http://localhost:4321](http://localhost:4321).
@@ -34,6 +34,40 @@ Open [http://localhost:4321](http://localhost:4321).
 ```bash
 npm run build    # outputs to dist/
 npm run preview  # preview the production build locally
+```
+
+### Scripts Reference
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start local dev server at `localhost:4321` |
+| `npm run build` | Build for production to `dist/` |
+| `npm run preview` | Preview the production build locally |
+| `npm run lint` | Run ESLint on TypeScript/JS files |
+| `npm run lint:fix` | Run ESLint with auto-fix |
+| `npm run format` | Format all files with Prettier |
+| `npm run format:check` | Check formatting without writing |
+| `npm run spellcheck` | Run cspell on source, test, and markdown files |
+| `npm run test` | Run all Playwright tests (all devices) |
+| `npm run test:headed` | Run tests with a visible browser window |
+| `npm run test:debug` | Run tests in Playwright debug mode (step-through) |
+
+To run a single test file:
+
+```bash
+npm run test -- tests/contact.spec.ts
+```
+
+To run a single test by name:
+
+```bash
+npm run test -- -g "copies email to clipboard"
+```
+
+To run tests for a specific device only:
+
+```bash
+npm run test -- --project="iPhone 14"
 ```
 
 ## Architecture
@@ -275,7 +309,7 @@ The following accessibility features are built in:
 ### Setup
 
 ```bash
-npm install
+npm ci
 npx playwright install chromium
 ```
 
@@ -288,8 +322,10 @@ Start the dev server, then run tests in a separate terminal:
 npm run dev
 
 # Terminal 2
-npx playwright test
+npm run test
 ```
+
+See the Scripts Reference section above for running single tests, specific devices, and debug mode.
 
 ### Device Matrix
 

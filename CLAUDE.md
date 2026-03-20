@@ -3,6 +3,9 @@
 ## Environment
 
 - Node 22+ is required. Always run `nvm use 22` before npm commands.
+- Use `npm ci` (not `npm install`) to install dependencies.
+- All dependency versions are pinned (no `^` or `~`). When adding dependencies use `npm install --save-exact`.
+- Always use `npm run <script>` instead of running tools directly with `npx`.
 
 ## Astro Conventions
 

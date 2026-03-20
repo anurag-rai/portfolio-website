@@ -7,9 +7,17 @@
 ## Setup
 
 ```bash
-npm install
-npm run dev
+npm ci           # install exact pinned versions from lock file
+npm run dev      # start dev server
 ```
+
+## Dependency Management
+
+All dependency versions in `package.json` are **pinned** (no `^` or `~` ranges). This ensures every contributor and CI environment uses the exact same versions.
+
+- Use `npm ci` (not `npm install`) to install. This installs from the lock file and fails if it's out of sync with `package.json`.
+- When adding a new dependency, pin it: `npm install --save-exact <package>` or `npm install --save-exact -D <package>`.
+- When upgrading, update the exact version in `package.json` and run `npm install` to regenerate the lock file.
 
 ## Commit Convention
 
@@ -44,13 +52,15 @@ Keep the subject line under 72 characters. Use the imperative mood ("add", not "
 
 Husky runs the following checks on every commit via lint-staged:
 
-- **ESLint** — lints and auto-fixes `.ts`, `.js`, `.mjs` files
-- **Prettier** — formats all staged files (`.ts`, `.js`, `.astro`, `.css`, `.json`, `.md`)
-- **cspell** — checks spelling in `.ts`, `.astro`, and `.md` files
+- **ESLint** -- lints and auto-fixes `.ts`, `.js`, `.mjs` files
+- **Prettier** -- formats all staged files (`.ts`, `.js`, `.astro`, `.css`, `.json`, `.md`)
+- **cspell** -- checks spelling in `.ts`, `.astro`, and `.md` files
 
 If a hook fails, the commit is blocked. Fix the issue and try again.
 
 ## Scripts
+
+Always use `npm run <script>` instead of running tools directly with `npx`.
 
 | Command                | Description                                |
 | ---------------------- | ------------------------------------------ |
@@ -62,22 +72,43 @@ If a hook fails, the commit is blocked. Fix the issue and try again.
 | `npm run format`       | Format all files with Prettier             |
 | `npm run format:check` | Check formatting without writing           |
 | `npm run spellcheck`   | Run cspell on source and test files        |
+| `npm run test`         | Run all Playwright tests (all devices)     |
+| `npm run test:headed`  | Run tests with a visible browser window    |
+| `npm run test:debug`   | Run tests in Playwright debug mode         |
 
 ## Testing
 
-Tests use Playwright. Start the dev server, then run tests in a separate terminal:
+Start the dev server, then run tests in a separate terminal:
 
 ```bash
 # Terminal 1
 npm run dev
 
 # Terminal 2
-npx playwright test
+npm run test
+```
+
+Run a single test file:
+
+```bash
+npm run test -- tests/contact.spec.ts
+```
+
+Run a single test by name:
+
+```bash
+npm run test -- -g "copies email to clipboard"
+```
+
+Run tests for a specific device only:
+
+```bash
+npm run test -- --project="iPhone 14"
 ```
 
 Tests run against three device viewports (Desktop Chrome, iPhone 14, iPad Mini). See `playwright.config.ts` to add more.
 
-Tests are **behavior-based** — they assert on what the user sees (opacity, scroll position, text content), not on implementation details (CSS classes, animation library internals). This means tests survive framework or styling changes.
+Tests are **behavior-based** -- they assert on what the user sees (opacity, scroll position, text content), not on implementation details (CSS classes, animation library internals). This means tests survive framework or styling changes.
 
 ## Code Style
 
