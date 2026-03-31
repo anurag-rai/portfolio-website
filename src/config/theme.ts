@@ -86,4 +86,22 @@ export const theme = {
     /** Time the toast stays visible before fading (ms) */
     holdDurationMs: 2000,
   },
+
+  /** Footer grass easter egg */
+  grass: {
+    /** Blades per 100px of canvas width — scales with viewport */
+    bladeDensity: 24,
+    height: { min: 30, max: 120 },
+    baseWidth: { min: 6, max: 16 },
+    lean: { min: -0.4, max: 0.4 },
+    curve: { min: -0.3, max: 0.3 },
+    sway: { minAmount: 3, maxAmount: 10, minSpeed: 0.4, maxSpeed: 1.2 },
+    opacity: { min: 0.35, max: 0.85 },
+    canvasHeight: 140,
+    /** HSL color range for depth layering (back → front) */
+    hue: { min: 75, max: 85 },
+    lightness: { min: 40, max: 60 },
+    saturation: 18,
+    toastMessage: "Finally touching grass, huh?",
+  },
 } as const;
