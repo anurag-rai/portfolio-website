@@ -1,5 +1,7 @@
 # Portfolio
 
+[![CI](https://github.com/anurag-rai/portfolio-website/actions/workflows/ci.yml/badge.svg)](https://github.com/anurag-rai/portfolio-website/actions/workflows/ci.yml)
+
 A single-page developer portfolio with cinematic scroll animations, a dark monochrome theme with earthy accent colors, and an experience-focused layout. Built with Astro, GSAP, and Three.js.
 
 ## Tech Stack
