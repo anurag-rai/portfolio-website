@@ -1,5 +1,6 @@
 ---
-import { formatDate, calcDuration, type ExperienceEntry } from "../data/experience";
+import type { ExperienceEntry } from "../data/experience";
+import { formatDate, calcDuration } from "../utils/dates";
 interface Props { entry: ExperienceEntry; index: number; }
 const { entry, index } = Astro.props;
 
@@ -17,7 +18,14 @@ const duration = calcDuration(entry.startDate, entry.endDate);
     </div>
     <p class="text-sm font-[500] text-[var(--accent)] mb-3">{entry.company}</p>
     <div class="timeline-details max-h-0 overflow-hidden transition-all duration-500">
-      <p class="text-sm leading-relaxed text-[var(--text-muted)] mb-3">{entry.description}</p>
+      <ul class="list-none space-y-2 mb-3">
+        {entry.description.map((point) => (
+          <li class="text-sm leading-relaxed text-[var(--text-muted)] flex items-start gap-2.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-[var(--accent)] mt-[0.55rem] shrink-0"></span>
+            <span set:html={point} />
+          </li>
+        ))}
+      </ul>
       <div class="flex flex-wrap gap-1.5">
         {entry.technologies.map((tech) => (
           <span class="rounded px-2 py-1 text-[0.6875rem] font-[500] bg-[var(--accent-dark)] text-[var(--text-primary)]">{tech}</span>

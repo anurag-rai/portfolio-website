@@ -1,91 +1,81 @@
 export interface ExperienceEntry {
   role: string;
   company: string;
-  startDate: string; // "YYYY-MM" format, e.g. "2023-05"
-  endDate: string | null; // "YYYY-MM" or null for "Present"
-  description: string;
+  /** Format: "YYYY-MM", e.g. "2023-05" */
+  startDate: string;
+  /** Format: "YYYY-MM", or null for "Present" */
+  endDate: string | null;
+  /**
+   * Each string is rendered as a bullet point.
+   * Supports inline HTML for formatting — use <strong> for bold.
+   * @example ["Developed an <strong>LLM-powered</strong> quiz system."]
+   */
+  description: string[];
   technologies: string[];
 }
 
-const MONTH_NAMES = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-
-/**
- * Formats a "YYYY-MM" date string into a short display format.
- * @example formatDate("2023-05") // "May '23"
- */
-export function formatDate(dateStr: string): string {
-  const [year, month] = dateStr.split("-").map(Number);
-  return `${MONTH_NAMES[month - 1]} '${String(year).slice(2)}`;
-}
-
-/**
- * Calculates the duration between two "YYYY-MM" dates.
- * Uses current date when `end` is null (ongoing role).
- * @example calcDuration("2021-06", "2023-04") // "1y 10m"
- * @example calcDuration("2023-05", null)       // "2y 10m" (if today is March 2026)
- */
-export function calcDuration(start: string, end: string | null): string {
-  const [sy, sm] = start.split("-").map(Number);
-  let ey: number, em: number;
-  if (end) {
-    [ey, em] = end.split("-").map(Number);
-  } else {
-    const now = new Date();
-    ey = now.getFullYear();
-    em = now.getMonth() + 1;
-  }
-
-  let totalMonths = (ey - sy) * 12 + (em - sm);
-  // Round up: partial months count as 1
-  if (totalMonths < 1) totalMonths = 1;
-
-  const years = Math.floor(totalMonths / 12);
-  const months = totalMonths % 12;
-
-  if (years === 0) return `${months}m`;
-  if (months === 0) return `${years}y`;
-  return `${years}y ${months}m`;
-}
-
+// Reverse chronological order
 export const experiences: ExperienceEntry[] = [
   {
     role: "Senior Software Engineer",
-    company: "Company Name",
-    startDate: "2023-05",
+    company: "Clipboard Health",
+    startDate: "2022-12",
     endDate: null,
-    description:
-      "Led development of real-time systems and migrated core services to a microservices architecture. Improved system reliability and reduced deployment times.",
-    technologies: ["TypeScript", "React", "Node.js", "AWS", "PostgreSQL"],
+    description: [
+      // -- Background checks
+      "Led a team of 3 engineers to redesign criminal background check enforcement for healthcare workers, moving from upfront validation to intent-triggered, asynchronous screening while enforcing strict compliance and safety invariants via layered controls. This <strong>reduced ~70% wasted checks</strong>, <strong>lowering per-active-user costs by ~80%</strong> and <strong>saving ~$1.5M+ annually.</strong>",
+      // -- OTA
+      "Architected and launched over-the-air (OTA) updates for a mobile app, replacing weekly app store releases with CI-driven deployments <strong>reducing time-to-user from 7+ days to ~30 minutes</strong>. This <strong>eliminated 100+ QA hours/week</strong>, enabled almost-instant hotfixes and rollbacks, achieved <strong>80% user adoption within 12 hours</strong>, and <strong>enabled same-day experiment delivery across all product teams.</strong>",
+      // -- Reviews
+      "Led a team of 2 engineers to architect a workplace reviews microservice (1.4M req/day, 175 peak RPS, sub-10ms p50), replacing a generic rating system with structured reviews, multi-dimensional aggregations, and LLM-powered content moderation. Workers who used reviews saw <strong>50% fewer poor ratings</strong> and <strong>49% higher retention per workplace.</strong>",
+      // -- Quizzes
+      "Led a team of 3 engineers to improve marketplace supply quality by building an LLM-driven system that transforms unstructured workplace rules into quizzes for healthcare workers enforced before they book shifts. This <strong>increased rule adherence ratings from 63% to 72%</strong> with <strong>no drop in fill rate.</strong>",
+      // -- Skills assessment
+      "Designed and led the evolution of a marketplace reliability system to screen and tier new healthcare workers, <strong>screening out workers 2x more likely to no-show</strong> while <strong>preserving supply through tiered booking access.</strong>",
+    ],
+    technologies: ["TypeScript", "React", "NodeJS", "Terraform", "AWS", "PostgreSQL", "MongoDB", "Redis"],
+  },
+  {
+    role: "Software Development Engineer 2",
+    company: "Amazon",
+    startDate: "2021-07",
+    endDate: "2022-04",
+    description: [
+      "Designed and implemented a highly available configuration management system for Amazon warehouses, enabling the launch of a greenfield project.",
+      "Developed a deployment workflow to distribute UI artifacts across multiple global regions for a multi-tenant frontend application, ensuring reliable and scalable application rollouts.",
+    ],
+    technologies: ["TypeScript", "Java", "React", "AWS CDK", "AWS", "DynamoDB"],
   },
   {
     role: "Software Engineer",
-    company: "Previous Company",
-    startDate: "2021-06",
-    endDate: "2023-04",
-    description:
-      "Built and maintained customer-facing features across the full stack. Implemented CI/CD pipelines and improved test coverage.",
-    technologies: ["TypeScript", "React", "GraphQL", "Docker"],
+    company: "Smallcase",
+    startDate: "2018-12",
+    endDate: "2021-07",
+    description: [
+      "Developed multiple RESTful microservices from inception to deployment as part of a domain-driven service-oriented architecture and integrated with multiple third-party services—including financial brokerage firms and payment solutions—to support stock transactions for over 4.5 million users.",
+      "Developed and scaled critical services such as a notification system delivering 1 million+ daily notifications and a distributed cron service executing 1,000+ business-critical jobs daily.",
+    ],
+    technologies: ["JavaScript", "NodeJS", "Kafka", "MongoDB", "Redis"],
   },
   {
-    role: "Junior Developer",
-    company: "First Company",
-    startDate: "2019-01",
-    endDate: "2021-05",
-    description:
-      "Developed internal tools and contributed to the main product. Gained deep experience in frontend development and testing.",
-    technologies: ["JavaScript", "React", "CSS", "Node.js"],
+    role: "Software Engineer",
+    company: "Grey Orange",
+    startDate: "2017-08",
+    endDate: "2018-11",
+    description: [
+      "Developed an event-driven service with both push-based (webhooks/events) and pull-based (REST API) capabilities providing real-time order lifecycle visibility for warehouse operations.",
+      "Built an internal tool to detect SLA breaches, improving operational efficiency.",
+    ],
+    technologies: ["Erlang", "Mnesia", "Python", "RabbitMQ"],
+  },
+  {
+    role: "Summer Intern - Google Summer of Code",
+    company: "AIMA Code",
+    startDate: "2016-04",
+    endDate: "2016-07",
+    description: [
+      "Implemented algorithms for First-Order and Propositional Logic.",
+    ],
+    technologies: ["Java", "ANTLR", "JUnit"],
   },
 ];
