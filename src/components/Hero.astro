@@ -1,6 +1,6 @@
 ---
 import HeroScene from "./HeroScene.astro";
-import { siteConfig } from "../config/site";
+import { profile } from "../data/profile";
 ---
 
 <section
@@ -17,13 +17,13 @@ import { siteConfig } from "../config/site";
       id="hero-title"
       class="text-[clamp(2.5rem,6vw,5rem)] font-[800] tracking-[-2px] text-[var(--text-primary)]"
     >
-      {siteConfig.name.toUpperCase()}
+      {profile.name.toUpperCase()}
     </h1>
     <p
       id="hero-subtitle"
       class="mt-3 text-[clamp(0.75rem,1.5vw,0.875rem)] font-[300] tracking-[3px] uppercase text-[var(--text-muted)]"
     >
-      {siteConfig.title}
+      {profile.title}
     </p>
   </div>
 

@@ -1,6 +1,7 @@
 ---
-import { siteConfig } from "../config/site";
-const { timezone, timezoneLabel } = siteConfig;
+import { clock } from "../config/clock";
+import { theme } from "../config/theme";
+const { timezone, label: timezoneLabel } = clock;
 ---
 
 <span id="live-clock" class="text-xs font-[300] tracking-[0.5px] text-[var(--text-dim)]">

@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import { siteConfig } from "../config/site";
+import { profile } from "../data/profile";
 
 interface Props {
   title?: string;
@@ -8,8 +8,8 @@ interface Props {
 }
 
 const {
-  title = `${siteConfig.name} — ${siteConfig.title}`,
-  description = siteConfig.description,
+  title = `${profile.name} — ${profile.title}`,
+  description = profile.description,
 } = Astro.props;
 ---
 
