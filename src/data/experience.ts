@@ -33,7 +33,16 @@ export const experiences: ExperienceEntry[] = [
       // -- Skills assessment
       "Designed and led the evolution of a marketplace reliability system to screen and tier new healthcare workers, <strong>screening out workers 2x more likely to no-show</strong> while <strong>preserving supply through tiered booking access.</strong>",
     ],
-    technologies: ["TypeScript", "React", "NodeJS", "Terraform", "AWS", "PostgreSQL", "MongoDB", "Redis"],
+    technologies: [
+      "TypeScript",
+      "React",
+      "NodeJS",
+      "Terraform",
+      "AWS",
+      "PostgreSQL",
+      "MongoDB",
+      "Redis",
+    ],
   },
   {
     role: "Software Development Engineer 2",
@@ -73,9 +82,7 @@ export const experiences: ExperienceEntry[] = [
     company: "AIMA Code",
     startDate: "2016-04",
     endDate: "2016-07",
-    description: [
-      "Implemented algorithms for First-Order and Propositional Logic.",
-    ],
+    description: ["Implemented algorithms for First-Order and Propositional Logic."],
     technologies: ["Java", "ANTLR", "JUnit"],
   },
 ];

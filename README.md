@@ -149,15 +149,15 @@ showToast("Email copied to clipboard", `<svg>...</svg>`);
 
 **Behavior:**
 
-| Feature             | Detail                                                                    |
-| ------------------- | ------------------------------------------------------------------------- |
-| Stacking            | Multiple toasts stack vertically. Newest appears at the bottom.           |
-| Max visible         | 3 simultaneous toasts. The 4th evicts the oldest.                         |
-| Auto-dismiss        | Fades out after `theme.toast.holdDurationMs` (default 4s).               |
-| Repositioning       | When a toast is dismissed, remaining toasts slide up smoothly.            |
-| Animation           | Bounce-in entrance, expanding ring pulse, fade-out exit.                  |
-| Accessibility       | Container has `aria-live="polite"` for screen reader announcements.       |
-| Styling             | Uses `--accent` CSS variable for border and text color. Dark background.  |
+| Feature       | Detail                                                                   |
+| ------------- | ------------------------------------------------------------------------ |
+| Stacking      | Multiple toasts stack vertically. Newest appears at the bottom.          |
+| Max visible   | 3 simultaneous toasts. The 4th evicts the oldest.                        |
+| Auto-dismiss  | Fades out after `theme.toast.holdDurationMs` (default 4s).               |
+| Repositioning | When a toast is dismissed, remaining toasts slide up smoothly.           |
+| Animation     | Bounce-in entrance, expanding ring pulse, fade-out exit.                 |
+| Accessibility | Container has `aria-live="polite"` for screen reader announcements.      |
+| Styling       | Uses `--accent` CSS variable for border and text color. Dark background. |
 
 **Configuration** in `src/config/theme.ts`:
 
@@ -182,14 +182,14 @@ initGrass(canvas);
 
 **Behavior:**
 
-| Feature             | Detail                                                                          |
-| ------------------- | ------------------------------------------------------------------------------- |
-| Rendering           | Canvas 2D API, quadratic bezier curves for blade shapes                         |
-| Density             | Scales with viewport: `bladeDensity` blades per 100px width                     |
-| Depth               | Back-layer blades are darker, front-layer lighter (HSL-based)                   |
-| Wind                | Each blade has independent sine-based sway (phase, speed, amplitude)            |
-| Resize              | Regenerates blades on window resize to maintain density                          |
-| Reduced motion      | Renders a static frame when `prefers-reduced-motion: reduce` is active          |
+| Feature        | Detail                                                                 |
+| -------------- | ---------------------------------------------------------------------- |
+| Rendering      | Canvas 2D API, quadratic bezier curves for blade shapes                |
+| Density        | Scales with viewport: `bladeDensity` blades per 100px width            |
+| Depth          | Back-layer blades are darker, front-layer lighter (HSL-based)          |
+| Wind           | Each blade has independent sine-based sway (phase, speed, amplitude)   |
+| Resize         | Regenerates blades on window resize to maintain density                |
+| Reduced motion | Renders a static frame when `prefers-reduced-motion: reduce` is active |
 
 **Configuration** in `src/config/theme.ts`:
 
@@ -218,30 +218,30 @@ Reusable progress visualization components using the earthy gradient palette. No
 | `Preloader`       | Icosahedron that draws itself edge by edge. Each edge animates from vertex to vertex with a flash.     | In use    |
 | `ProgressRing`    | SVG circular ring with gradient stroke. Fill proportional to `progress` prop. Slot for center content. | Available |
 | `WireframeSphere` | Canvas wireframe sphere that builds latitude/longitude lines proportional to `progress`.               | Available |
-| `OrbitalDots`    | SVG dots that appear in a circular orbit. Earthy gradient distributed across dots. Optional rotation.   | Available |
+| `OrbitalDots`     | SVG dots that appear in a circular orbit. Earthy gradient distributed across dots. Optional rotation.  | Available |
 
 Props shared across all three: `progress` (0-100), `size` (pixels). See JSDoc in each file for full API.
 
 ## Components
 
-| Component        | Purpose                                                                                                                                                                                                                    | Data Source                                      |
-| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| `Preloader`      | Tracks real asset loading and displays an icosahedron that draws itself edge by edge as progress advances. Counter shows percentage. Wipes upward on completion and dispatches `preloader-complete` event.                  | Internal asset tracking                          |
-| `Hero`           | Full-viewport intro with character-stagger animation on name and subtitle. Waits for `preloader-complete` before animating. Includes scroll indicator.                                                                     | `src/config/site.ts`                             |
-| `HeroScene`      | Mounts a `<canvas>` for Three.js. Checks WebGL support before lazy-importing `hero-scene.ts`. Dispatches `hero-scene-ready` when loaded.                                                                                   | `src/scripts/hero-scene.ts`                      |
-| `Navbar`         | Fixed header that appears after scrolling past the hero (ScrollTrigger). Tracks active section and highlights the corresponding link. Smooth scrolls on click.                                                             | `src/config/site.ts`                             |
-| `MobileMenu`     | Full-screen overlay triggered by hamburger button. Animates links with stagger. Closes on link click, Escape key, or overlay click. Locks body scroll while open.                                                          | `src/config/site.ts`                             |
-| `About`          | Bio section with paragraphs (character split reveal) and a grid of skill pills (staggered fade-in). Photo placeholder.                                                                                                     | `src/config/site.ts`                             |
-| `Experience`     | Vertical timeline powered by `src/data/experience.ts`. Renders `TimelineNode` for each entry. Scroll-synced progress line tracks reading position.                                                                         | `ExperienceEntry[]`                              |
-| `TimelineNode`   | Single timeline entry. Shows role, company, formatted date range with calculated duration. Expands to reveal description and tech tags when scrolled into the viewport center.                                             | Props: `entry: ExperienceEntry`, `index: number` |
-| `Projects`       | Renders `ProjectCard` for each entry in `src/data/projects.ts`. Cards alternate slide direction (left/right) with parallax on the image placeholder.                                                                       | `ProjectEntry[]`                                 |
-| `ProjectCard`    | Single project with title, description, tech tags, and optional Live Site / GitHub links. Even-indexed cards have image on the left; odd-indexed have it on the right.                                                     | Props: `project: ProjectEntry`, `index: number`  |
-| `Contact`        | CTA section with "Get In Touch" button that copies email to clipboard (with textarea fallback for older browsers). Triggers a toast via the shared toast system. Social icons for GitHub, LinkedIn, and email.              | `src/config/site.ts`                             |
-| `Footer`         | Copyright line (year set at build time) and live clock. Separated by a gradient `--gradient-earth` line. Houses the animated grass easter egg.                                                                             | `Clock`, `FooterGrass` child components          |
-| `FooterGrass`    | Procedural canvas-based grass silhouette with wind animation. Clicking triggers a toast. Blade density scales with viewport width. Respects `prefers-reduced-motion`.                                                       | `src/scripts/grass.ts`, `src/config/theme.ts`    |
-| `Clock`          | Displays current time in the configured timezone, formatted with `Intl.DateTimeFormat`, updated every second.                                                                                                              | `src/config/site.ts`                             |
-| `CustomCursor`   | Creates a dot and circle that follow the mouse. Only activates on `pointer: fine` devices. Scales up on hover over links, buttons, and project cards. Hides the native cursor.                                             | `src/scripts/cursor.ts`                          |
-| `ScrollProgress` | A 3px-high fixed bar at the top of the viewport with `--gradient-earth` background. Width is scrubbed from 0% to 100% via ScrollTrigger as the user scrolls.                                                               | ScrollTrigger scrub                              |
+| Component        | Purpose                                                                                                                                                                                                        | Data Source                                      |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| `Preloader`      | Tracks real asset loading and displays an icosahedron that draws itself edge by edge as progress advances. Counter shows percentage. Wipes upward on completion and dispatches `preloader-complete` event.     | Internal asset tracking                          |
+| `Hero`           | Full-viewport intro with character-stagger animation on name and subtitle. Waits for `preloader-complete` before animating. Includes scroll indicator.                                                         | `src/config/site.ts`                             |
+| `HeroScene`      | Mounts a `<canvas>` for Three.js. Checks WebGL support before lazy-importing `hero-scene.ts`. Dispatches `hero-scene-ready` when loaded.                                                                       | `src/scripts/hero-scene.ts`                      |
+| `Navbar`         | Fixed header that appears after scrolling past the hero (ScrollTrigger). Tracks active section and highlights the corresponding link. Smooth scrolls on click.                                                 | `src/config/site.ts`                             |
+| `MobileMenu`     | Full-screen overlay triggered by hamburger button. Animates links with stagger. Closes on link click, Escape key, or overlay click. Locks body scroll while open.                                              | `src/config/site.ts`                             |
+| `About`          | Bio section with paragraphs (character split reveal) and a grid of skill pills (staggered fade-in). Photo placeholder.                                                                                         | `src/config/site.ts`                             |
+| `Experience`     | Vertical timeline powered by `src/data/experience.ts`. Renders `TimelineNode` for each entry. Scroll-synced progress line tracks reading position.                                                             | `ExperienceEntry[]`                              |
+| `TimelineNode`   | Single timeline entry. Shows role, company, formatted date range with calculated duration. Expands to reveal description and tech tags when scrolled into the viewport center.                                 | Props: `entry: ExperienceEntry`, `index: number` |
+| `Projects`       | Renders `ProjectCard` for each entry in `src/data/projects.ts`. Cards alternate slide direction (left/right) with parallax on the image placeholder.                                                           | `ProjectEntry[]`                                 |
+| `ProjectCard`    | Single project with title, description, tech tags, and optional Live Site / GitHub links. Even-indexed cards have image on the left; odd-indexed have it on the right.                                         | Props: `project: ProjectEntry`, `index: number`  |
+| `Contact`        | CTA section with "Get In Touch" button that copies email to clipboard (with textarea fallback for older browsers). Triggers a toast via the shared toast system. Social icons for GitHub, LinkedIn, and email. | `src/config/site.ts`                             |
+| `Footer`         | Copyright line (year set at build time) and live clock. Separated by a gradient `--gradient-earth` line. Houses the animated grass easter egg.                                                                 | `Clock`, `FooterGrass` child components          |
+| `FooterGrass`    | Procedural canvas-based grass silhouette with wind animation. Clicking triggers a toast. Blade density scales with viewport width. Respects `prefers-reduced-motion`.                                          | `src/scripts/grass.ts`, `src/config/theme.ts`    |
+| `Clock`          | Displays current time in the configured timezone, formatted with `Intl.DateTimeFormat`, updated every second.                                                                                                  | `src/config/site.ts`                             |
+| `CustomCursor`   | Creates a dot and circle that follow the mouse. Only activates on `pointer: fine` devices. Scales up on hover over links, buttons, and project cards. Hides the native cursor.                                 | `src/scripts/cursor.ts`                          |
+| `ScrollProgress` | A 3px-high fixed bar at the top of the viewport with `--gradient-earth` background. Width is scrubbed from 0% to 100% via ScrollTrigger as the user scrolls.                                                   | ScrollTrigger scrub                              |
 
 ## Accessibility
 

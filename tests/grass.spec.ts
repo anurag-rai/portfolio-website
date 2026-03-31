@@ -46,9 +46,9 @@ test.describe("Footer Grass", () => {
   });
 
   test("canvas is positioned above the footer divider", async ({ page }) => {
-    const canvasBottom = await page.locator("#footer-grass").evaluate(
-      (el) => el.getBoundingClientRect().bottom,
-    );
+    const canvasBottom = await page
+      .locator("#footer-grass")
+      .evaluate((el) => el.getBoundingClientRect().bottom);
     const dividerTop = await page.evaluate(() => {
       const footer = document.querySelector("footer");
       if (!footer) return 0;
@@ -73,9 +73,9 @@ test.describe("Footer Grass", () => {
   });
 
   test("grass canvas is clickable (has cursor pointer)", async ({ page }) => {
-    const cursor = await page.locator("#footer-grass").evaluate(
-      (el) => getComputedStyle(el).cursor,
-    );
+    const cursor = await page
+      .locator("#footer-grass")
+      .evaluate((el) => getComputedStyle(el).cursor);
     expect(cursor).toBe("pointer");
   });
 

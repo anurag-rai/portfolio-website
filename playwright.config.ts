@@ -15,5 +15,10 @@ export default defineConfig({
     baseURL: "http://localhost:4321",
     actionTimeout: 10000,
   },
+  webServer: {
+    command: "npm run build && npm run preview",
+    url: "http://localhost:4321",
+    reuseExistingServer: true,
+  },
   projects: Object.entries(TEST_DEVICES).map(([name, use]) => ({ name, use })),
 });

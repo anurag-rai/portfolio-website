@@ -18,7 +18,8 @@ function getContainer(): HTMLElement {
   if (el) return el;
   const c = document.createElement("div");
   c.id = "toast-container";
-  c.style.cssText = "position:fixed;top:2rem;left:50%;transform:translateX(-50%);z-index:9999;pointer-events:none;display:flex;flex-direction:column;align-items:center;";
+  c.style.cssText =
+    "position:fixed;top:2rem;left:50%;transform:translateX(-50%);z-index:9999;pointer-events:none;display:flex;flex-direction:column;align-items:center;";
   c.setAttribute("aria-live", "polite");
   document.body.appendChild(c);
   return c;
@@ -70,8 +71,8 @@ export function showToast(message: string, icon: string) {
 
   container.appendChild(el);
 
-  // Force reflow
-  el.offsetHeight;
+  // Force reflow so the browser registers the initial opacity:0 before transitioning
+  void el.offsetHeight;
 
   // Animate in
   el.style.transition = `opacity ${ANIMATE_IN_MS}ms cubic-bezier(0.34, 1.56, 0.64, 1), transform ${ANIMATE_IN_MS}ms cubic-bezier(0.34, 1.56, 0.64, 1)`;
