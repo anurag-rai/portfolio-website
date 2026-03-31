@@ -17,7 +17,7 @@ const duration = calcDuration(entry.startDate, entry.endDate);
       <span class="text-xs font-[300] tracking-[0.5px] text-[var(--text-dim)]">{start} — {end} <span class="text-[var(--accent-sage)]">({duration})</span></span>
     </div>
     <p class="text-sm font-[500] text-[var(--accent)] mb-3">{entry.company}</p>
-    <div class="timeline-details max-h-0 overflow-hidden transition-all duration-500">
+    <div class="timeline-details">
       <ul class="list-none space-y-2 mb-3">
         {entry.description.map((point) => (
           <li class="text-sm leading-relaxed text-[var(--text-muted)] flex items-start gap-2.5">

@@ -30,7 +30,7 @@ import TimelineNode from "./TimelineNode.astro";
     nodes.forEach((node) => {
       ScrollTrigger.create({
         trigger: node, start: "top 60%", end: "bottom 40%",
-        onEnter: () => activateNode(node), onLeave: () => deactivateNode(node),
+        onEnter: () => activateNode(node),
         onEnterBack: () => activateNode(node), onLeaveBack: () => deactivateNode(node),
       });
     });
@@ -43,21 +43,17 @@ import TimelineNode from "./TimelineNode.astro";
     const dot = node.querySelector(".timeline-dot");
     const content = node.querySelector(".timeline-content");
     const role = node.querySelector(".timeline-role");
-    const details = node.querySelector(".timeline-details") as HTMLElement;
     dot?.classList.add("!bg-[var(--accent)]", "!border-[var(--accent)]", "shadow-[0_0_12px_rgba(203,153,126,0.4)]");
     content?.classList.remove("opacity-40"); content?.classList.add("opacity-100");
     role?.classList.remove("text-[var(--text-muted)]"); role?.classList.add("!text-[var(--accent-secondary)]");
-    if (details) details.style.maxHeight = details.scrollHeight + "px";
   }
 
   function deactivateNode(node: Element) {
     const dot = node.querySelector(".timeline-dot");
     const content = node.querySelector(".timeline-content");
     const role = node.querySelector(".timeline-role");
-    const details = node.querySelector(".timeline-details") as HTMLElement;
     dot?.classList.remove("!bg-[var(--accent)]", "!border-[var(--accent)]", "shadow-[0_0_12px_rgba(203,153,126,0.4)]");
     content?.classList.add("opacity-40"); content?.classList.remove("opacity-100");
     role?.classList.add("text-[var(--text-muted)]"); role?.classList.remove("!text-[var(--accent-secondary)]");
-    if (details) details.style.maxHeight = "0";
   }
 </script>
