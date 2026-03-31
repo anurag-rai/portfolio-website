@@ -84,7 +84,7 @@ export const theme = {
   /** Toast notification */
   toast: {
     /** Time the toast stays visible before fading (ms) */
-    holdDurationMs: 2000,
+    holdDurationMs: 4000,
   },
 
   /** Footer grass easter egg */

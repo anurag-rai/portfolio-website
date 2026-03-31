@@ -65,8 +65,9 @@ The site is a single-page Astro application that outputs fully static HTML at bu
 │   │   ├── TimelineNode.astro    # Individual timeline entry with expand/collapse on scroll
 │   │   ├── Projects.astro        # Project cards with alternating slide-in + parallax images
 │   │   ├── ProjectCard.astro     # Individual project card with tech tags and links
-│   │   ├── Contact.astro         # CTA button (copies email), social icons, toast notification
-│   │   ├── Footer.astro          # Copyright + gradient separator + live clock
+│   │   ├── Contact.astro         # CTA button (copies email), social icons
+│   │   ├── Footer.astro          # Copyright + gradient separator + live clock + grass easter egg
+│   │   ├── FooterGrass.astro     # Animated procedural grass canvas with click-to-toast easter egg
 │   │   ├── Clock.astro           # Live IST time display, updates every second
 │   │   ├── CustomCursor.astro    # Dot + circle cursor, only on pointer:fine devices
 │   │   └── ScrollProgress.astro  # Gradient progress bar fixed at top of viewport
@@ -74,7 +75,9 @@ The site is a single-page Astro application that outputs fully static HTML at bu
 │   │   ├── animations.ts         # Generic data-animate reveal + manual character split
 │   │   ├── smooth-scroll.ts      # Lenis init + GSAP ticker sync + ScrollTrigger bridge
 │   │   ├── hero-scene.ts         # Three.js scene: 7 wireframe polyhedra with drift + avoidance
-│   │   └── cursor.ts             # Custom cursor with hover state scaling
+│   │   ├── cursor.ts             # Custom cursor with hover state scaling
+│   │   ├── toast.ts              # Unified toast notification system with stacking and auto-dismiss
+│   │   └── grass.ts              # Procedural grass canvas renderer with wind animation
 │   ├── styles/
 │   │   └── global.css            # CSS custom properties, reset, accessibility utilities
 │   └── data/
@@ -130,6 +133,80 @@ Font stack: `'Manrope', system-ui, sans-serif`.
 
 **`data-split`** -- Add alongside `data-animate` for character-level split text reveal. Each character gets its own `<span>` with staggered opacity and y-position animation. The original text is preserved in an `aria-label` for accessibility.
 
+### Toast Notifications (`src/scripts/toast.ts`)
+
+A unified, framework-agnostic toast notification system. Any component can trigger a toast by importing `showToast()` -- no markup or containers needed. The system manages its own DOM.
+
+```typescript
+import { showToast } from "../scripts/toast";
+
+showToast("Email copied to clipboard", `<svg>...</svg>`);
+```
+
+**API:** `showToast(message: string, iconHtml: string)` -- creates and displays a toast with the given message and inline SVG icon.
+
+**Behavior:**
+
+| Feature             | Detail                                                                    |
+| ------------------- | ------------------------------------------------------------------------- |
+| Stacking            | Multiple toasts stack vertically. Newest appears at the bottom.           |
+| Max visible         | 3 simultaneous toasts. The 4th evicts the oldest.                         |
+| Auto-dismiss        | Fades out after `theme.toast.holdDurationMs` (default 4s).               |
+| Repositioning       | When a toast is dismissed, remaining toasts slide up smoothly.            |
+| Animation           | Bounce-in entrance, expanding ring pulse, fade-out exit.                  |
+| Accessibility       | Container has `aria-live="polite"` for screen reader announcements.       |
+| Styling             | Uses `--accent` CSS variable for border and text color. Dark background.  |
+
+**Configuration** in `src/config/theme.ts`:
+
+```typescript
+toast: {
+  holdDurationMs: 4000,  // How long each toast stays visible
+}
+```
+
+To add a new toast trigger from any component, import `showToast` and call it with a message and SVG icon string. No registration or setup required.
+
+### Procedural Grass (`src/scripts/grass.ts`)
+
+A canvas-based animated grass renderer used as a footer easter egg. Generates natural-looking grass blade silhouettes with wind animation.
+
+```typescript
+import { initGrass } from "../scripts/grass";
+
+const canvas = document.getElementById("my-canvas") as HTMLCanvasElement;
+initGrass(canvas);
+```
+
+**Behavior:**
+
+| Feature             | Detail                                                                          |
+| ------------------- | ------------------------------------------------------------------------------- |
+| Rendering           | Canvas 2D API, quadratic bezier curves for blade shapes                         |
+| Density             | Scales with viewport: `bladeDensity` blades per 100px width                     |
+| Depth               | Back-layer blades are darker, front-layer lighter (HSL-based)                   |
+| Wind                | Each blade has independent sine-based sway (phase, speed, amplitude)            |
+| Resize              | Regenerates blades on window resize to maintain density                          |
+| Reduced motion      | Renders a static frame when `prefers-reduced-motion: reduce` is active          |
+
+**Configuration** in `src/config/theme.ts`:
+
+```typescript
+grass: {
+  bladeDensity: 24,              // Blades per 100px width
+  height: { min: 30, max: 120 }, // Blade height range (px)
+  baseWidth: { min: 6, max: 16 },// Width at ground level (px)
+  lean: { min: -0.4, max: 0.4 }, // Lean direction range
+  curve: { min: -0.3, max: 0.3 },// Curvature range
+  sway: { ... },                 // Wind animation params
+  canvasHeight: 140,             // Canvas height (px)
+  hue: { min: 75, max: 85 },    // HSL hue range for depth
+  lightness: { min: 40, max: 60 },
+  saturation: 18,
+  toastMessage: "Finally touching grass, huh?",
+}
+```
+
 ### Progress Indicators (`src/components/design-system/`)
 
 Reusable progress visualization components using the earthy gradient palette. Not all are actively used -- they are part of the design system for future use.
@@ -157,8 +234,9 @@ Props shared across all three: `progress` (0-100), `size` (pixels). See JSDoc in
 | `TimelineNode`   | Single timeline entry. Shows role, company, formatted date range with calculated duration. Expands to reveal description and tech tags when scrolled into the viewport center.                                             | Props: `entry: ExperienceEntry`, `index: number` |
 | `Projects`       | Renders `ProjectCard` for each entry in `src/data/projects.ts`. Cards alternate slide direction (left/right) with parallax on the image placeholder.                                                                       | `ProjectEntry[]`                                 |
 | `ProjectCard`    | Single project with title, description, tech tags, and optional Live Site / GitHub links. Even-indexed cards have image on the left; odd-indexed have it on the right.                                                     | Props: `project: ProjectEntry`, `index: number`  |
-| `Contact`        | CTA section with "Get In Touch" button that copies email to clipboard (with textarea fallback for older browsers). Shows a toast notification with expanding ring animation. Social icons for GitHub, LinkedIn, and email. | `src/config/site.ts`                             |
-| `Footer`         | Copyright line (year set at build time) and live clock. Separated by a gradient `--gradient-earth` line.                                                                                                                   | `Clock` child component                          |
+| `Contact`        | CTA section with "Get In Touch" button that copies email to clipboard (with textarea fallback for older browsers). Triggers a toast via the shared toast system. Social icons for GitHub, LinkedIn, and email.              | `src/config/site.ts`                             |
+| `Footer`         | Copyright line (year set at build time) and live clock. Separated by a gradient `--gradient-earth` line. Houses the animated grass easter egg.                                                                             | `Clock`, `FooterGrass` child components          |
+| `FooterGrass`    | Procedural canvas-based grass silhouette with wind animation. Clicking triggers a toast. Blade density scales with viewport width. Respects `prefers-reduced-motion`.                                                       | `src/scripts/grass.ts`, `src/config/theme.ts`    |
 | `Clock`          | Displays current time in the configured timezone, formatted with `Intl.DateTimeFormat`, updated every second.                                                                                                              | `src/config/site.ts`                             |
 | `CustomCursor`   | Creates a dot and circle that follow the mouse. Only activates on `pointer: fine` devices. Scales up on hover over links, buttons, and project cards. Hides the native cursor.                                             | `src/scripts/cursor.ts`                          |
 | `ScrollProgress` | A 3px-high fixed bar at the top of the viewport with `--gradient-earth` background. Width is scrubbed from 0% to 100% via ScrollTrigger as the user scrolls.                                                               | ScrollTrigger scrub                              |

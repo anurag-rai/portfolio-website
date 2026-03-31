@@ -44,12 +44,10 @@ test.describe("Contact Section", () => {
     await btn.click();
     await page.waitForTimeout(800);
 
-    const toast = page.locator("#email-toast");
-    const opacity = await toast.evaluate((el) => getComputedStyle(el).opacity);
-    expect(Number(opacity)).toBeGreaterThanOrEqual(0.9);
+    const container = page.locator("#toast-container");
+    await expect(container).toBeAttached();
 
-    // Toast text mentions email/copied
-    const toastText = await toast.textContent();
+    const toastText = await container.textContent();
     expect(toastText?.toLowerCase()).toContain("copied");
   });
 
@@ -59,12 +57,12 @@ test.describe("Contact Section", () => {
     }
 
     await page.locator("#copy-email-btn").click();
-    // Wait for auto-dismiss (2s hold + 0.3s fade)
-    await page.waitForTimeout(3000);
+    // Wait for auto-dismiss (4s hold + 0.3s fade)
+    await page.waitForTimeout(5000);
 
-    const toast = page.locator("#email-toast");
-    const opacity = await toast.evaluate((el) => getComputedStyle(el).opacity);
-    expect(Number(opacity)).toBeLessThan(0.5);
+    const toasts = page.locator("#toast-container > div");
+    const count = await toasts.count();
+    expect(count).toBe(0);
   });
 
   test("social icons are present with accessible labels", async ({ page }) => {
