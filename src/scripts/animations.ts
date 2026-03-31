@@ -52,16 +52,35 @@ export function splitTextReveal(selector: string, stagger = theme.reveal.splitTe
     el.innerHTML = "";
     el.setAttribute("aria-label", text);
 
-    text.split("").forEach((char) => {
-      const span = document.createElement("span");
-      span.textContent = char === " " ? "\u00A0" : char;
-      span.style.display = "inline-block";
-      span.setAttribute("aria-hidden", "true");
-      el.appendChild(span);
+    text.split(" ").forEach((word, wordIndex) => {
+      if (wordIndex > 0) {
+        const space = document.createElement("span");
+        space.className = "char";
+        space.textContent = "\u00A0";
+        space.style.display = "inline-block";
+        space.setAttribute("aria-hidden", "true");
+        el.appendChild(space);
+      }
+
+      const wordWrap = document.createElement("span");
+      wordWrap.style.display = "inline-block";
+      wordWrap.style.whiteSpace = "nowrap";
+      wordWrap.setAttribute("aria-hidden", "true");
+
+      word.split("").forEach((char) => {
+        const charSpan = document.createElement("span");
+        charSpan.className = "char";
+        charSpan.textContent = char;
+        charSpan.style.display = "inline-block";
+        charSpan.setAttribute("aria-hidden", "true");
+        wordWrap.appendChild(charSpan);
+      });
+
+      el.appendChild(wordWrap);
     });
 
     gsap.fromTo(
-      el.querySelectorAll("span"),
+      el.querySelectorAll(".char"),
       { opacity: 0, y: theme.reveal.splitText.offset },
       {
         opacity: 1,
