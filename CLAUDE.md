@@ -21,6 +21,13 @@
 - All personal data lives in `src/config/site.ts`. Components import from here — never hardcode names, emails, or social links in components.
 - All animation/interaction constants live in `src/config/theme.ts`. Scripts import from here — never hardcode timings, sizes, or easing in script files.
 
+## CI
+
+- CI runs on GitHub Actions (`.github/workflows/ci.yml`) on every push to main.
+- E2E tests use Chromium only in CI (no WebKit). Mobile viewports are tested via Chromium device emulation.
+- Playwright config uses `process.env.CI` — it is excluded from tsconfig to avoid needing `@types/node`.
+- Pixel-position assertions in E2E tests need generous tolerance (80px+) for cross-environment rendering differences between macOS and Ubuntu CI runners.
+
 ## Testing
 
 - Use Playwright as a debugging tool, not just a test runner. For "X doesn't work in the browser" issues, write a diagnostic spec that inspects `elementFromPoint`, stacking context, and computed styles before attempting a fix.
