@@ -7,7 +7,7 @@
 import { readFileSync, writeFileSync } from "fs";
 
 const summary = JSON.parse(readFileSync("coverage/coverage-summary.json", "utf8"));
-const pct = Math.round(summary.total.lines.pct);
+const pct = Math.round(summary.total.statements.pct);
 
 const color = pct >= 90 ? "#4c1" : pct >= 75 ? "#dfb317" : pct >= 50 ? "#fe7d37" : "#e05d44";
 const label = "coverage";
