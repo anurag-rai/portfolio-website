@@ -78,8 +78,13 @@ jobs:
           file_pattern: coverage/badge.svg
 
   e2e-tests:
-    name: E2E tests
+    name: E2E tests (${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shardIndex: [1, 2, 3]
+        shardTotal: [3]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -88,4 +93,4 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
-      - run: npm run test
+      - run: npm run test -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
