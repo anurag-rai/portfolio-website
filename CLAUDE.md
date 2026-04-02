@@ -31,6 +31,8 @@
 ## Git
 
 - Commit messages must be a single line. No multi-line bodies, no `Co-Authored-By` trailers.
+- The commit-msg hook only allows these prefixes: feat, fix, chore, docs, test.
+- When configuring CI actions that create commits, use one of these prefixes.
 
 ## Testing
 
