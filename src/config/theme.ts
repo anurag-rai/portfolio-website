@@ -90,6 +90,8 @@ export const theme = {
     wireframeOpacity: 0.15,
     /** Wireframe color (terracotta accent) */
     wireframeColor: "#cb997e",
+    /** Wireframe line width in pixels (uses fat lines for cross-browser support) */
+    wireframeLineWidth: 2,
     /** Radius within which shapes flee from cursor (world units) */
     avoidRadius: 2.5,
     /** Speed at which shapes move toward target position */
@@ -98,6 +100,25 @@ export const theme = {
     tiltBetaOffset: 45,
     /** Max tilt angle mapped to full range (degrees) */
     tiltMaxAngle: 30,
+    /** Max distance (world units) for a connection line between shapes */
+    connectionRadius: 3.0,
+    /** Base opacity of connection lines at zero distance */
+    connectionOpacity: 0.12,
+    /** Connection line width in pixels */
+    connectionLineWidth: 2.5,
+    /** Pixels per shape — lower = more dense (based on container pixel area) */
+    shapeDensity: 90_000,
+    /** Distance at which shapes start repelling each other (world units) */
+    shapeRepulsionRadius: 1.5,
+    /** Max repulsion push at zero distance (world units) */
+    shapeRepulsionStrength: 0.5,
+    /** Inner clearance for spiral placement (0–1, fraction of max radius kept empty) */
+    spiralInnerRadius: 0.35,
+    /** Minimum distance between any two shapes (world units) */
+    shapeMinSpacing: 1.2,
+    /** Min/max shapes regardless of viewport */
+    minShapes: 7,
+    maxShapes: 30,
   },
 
   /** Navbar animation */
