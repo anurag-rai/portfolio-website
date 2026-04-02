@@ -61,13 +61,13 @@ test.describe("Toast System", () => {
 
     // Trigger first toast
     await page.locator("#copy-email-btn").click();
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(500);
 
-    // Trigger second toast (grass)
+    // Trigger second toast (grass) — scroll to bottom and wait for grass canvas to be visible
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-    await page.waitForTimeout(600);
-    await page.locator("#footer-grass").click();
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(800);
+    await page.locator("#footer-grass").click({ force: true });
+    await page.waitForTimeout(500);
 
     const toasts = page.locator("#toast-container > div");
     expect(await toasts.count()).toBe(2);

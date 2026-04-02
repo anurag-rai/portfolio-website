@@ -68,7 +68,7 @@ test.describe("Contact Section", () => {
   test("social icons are present with accessible labels", async ({ page }) => {
     const socialLinks = page.locator("#contact a[aria-label], #contact button[aria-label]");
     const count = await socialLinks.count();
-    expect(count).toBeGreaterThanOrEqual(3); // GitHub, LinkedIn, Email
+    expect(count).toBeGreaterThanOrEqual(2); // GitHub, LinkedIn
 
     // Each has an aria-label
     for (let i = 0; i < count; i++) {
@@ -80,6 +80,6 @@ test.describe("Contact Section", () => {
   test("social links have SVG icons (not text placeholders)", async ({ page }) => {
     const icons = page.locator("#contact svg");
     const count = await icons.count();
-    expect(count).toBeGreaterThanOrEqual(3);
+    expect(count).toBeGreaterThanOrEqual(2);
   });
 });

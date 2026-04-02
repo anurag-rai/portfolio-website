@@ -19,29 +19,39 @@ test.describe("Scroll Animations", () => {
   });
 
   test("animations replay when scrolling back and forth", async ({ page }) => {
-    // Scroll to projects
+    const cardSelector = ".project-card";
+
+    // Scroll to projects — wait for card to become visible
     await scrollToSection(page, "projects");
-    await page.waitForTimeout(800);
+    await page.waitForFunction(
+      (sel) => {
+        const el = document.querySelector(sel);
+        return el && Number(getComputedStyle(el).opacity) > 0.5;
+      },
+      cardSelector,
+      { timeout: 5000 },
+    );
 
-    // Card should be visible
-    const card = page.locator(".project-card").first();
-    const opacityAfterScroll = await card.evaluate((el) => Number(getComputedStyle(el).opacity));
-    expect(opacityAfterScroll).toBeGreaterThan(0.5);
-
-    // Scroll away (back to hero)
+    // Scroll away (back to hero) — wait for card to fade out
     await page.evaluate(() => window.scrollTo(0, 0));
-    await page.waitForTimeout(800);
+    await page.waitForFunction(
+      (sel) => {
+        const el = document.querySelector(sel);
+        return el && Number(getComputedStyle(el).opacity) < 0.5;
+      },
+      cardSelector,
+      { timeout: 5000 },
+    );
 
-    // Card should be hidden/reversed
-    const opacityAfterAway = await card.evaluate((el) => Number(getComputedStyle(el).opacity));
-    expect(opacityAfterAway).toBeLessThan(0.5);
-
-    // Scroll back to projects
+    // Scroll back to projects — wait for card to animate back in
     await scrollToSection(page, "projects");
-    await page.waitForTimeout(800);
-
-    // Card should animate back in
-    const opacityReplay = await card.evaluate((el) => Number(getComputedStyle(el).opacity));
-    expect(opacityReplay).toBeGreaterThan(0.5);
+    await page.waitForFunction(
+      (sel) => {
+        const el = document.querySelector(sel);
+        return el && Number(getComputedStyle(el).opacity) > 0.5;
+      },
+      cardSelector,
+      { timeout: 5000 },
+    );
   });
 });
