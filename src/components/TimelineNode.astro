@@ -1,8 +1,10 @@
 ---
 import type { ExperienceEntry } from "../data/experience";
 import { formatDate, calcDuration } from "../utils/dates";
+import { theme } from "../config/theme";
 interface Props { entry: ExperienceEntry; index: number; }
 const { entry, index } = Astro.props;
+const { typography } = theme;
 
 const start = formatDate(entry.startDate);
 const end = entry.endDate ? formatDate(entry.endDate) : "Present";
@@ -13,14 +15,14 @@ const duration = calcDuration(entry.startDate, entry.endDate);
   <div class="timeline-dot absolute left-0 top-1 w-3 h-3 rounded-full border border-[var(--accent-dark)] bg-[var(--surface)] transition-all duration-500"></div>
   <div class="timeline-content opacity-40 transition-opacity duration-500">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-2">
-      <h3 class="timeline-role text-xl font-[600] text-[var(--text-muted)] transition-colors duration-500">{entry.role}</h3>
-      <span class="text-sm font-[300] tracking-[0.5px] text-[var(--text-dim)]">{start} — {end} <span class="text-[var(--accent-sage)]">({duration})</span></span>
+      <h3 class={`timeline-role ${typography.subtitle} text-[var(--text-muted)] transition-colors duration-500`}>{entry.role}</h3>
+      <span class={`${typography.caption} tracking-[0.5px] text-[var(--text-dim)]`}>{start} — {end} <span class="text-[var(--accent-sage)]">({duration})</span></span>
     </div>
-    <p class="text-base font-[500] text-[var(--accent)] mb-3">{entry.company}</p>
+    <p class={`${typography.accent} text-[var(--accent)] mb-3`}>{entry.company}</p>
     <div class="timeline-details">
       <ul class="list-none space-y-2 mb-3">
         {entry.description.map((point) => (
-          <li class="text-base leading-relaxed text-[var(--text-muted)] flex items-start gap-2.5">
+          <li class={`${typography.bodySmall} text-[var(--text-muted)] flex items-start gap-2.5`}>
             <span class="w-1.5 h-1.5 rounded-full bg-[var(--accent)] mt-[0.55rem] shrink-0"></span>
             <span set:html={point} />
           </li>
@@ -28,7 +30,7 @@ const duration = calcDuration(entry.startDate, entry.endDate);
       </ul>
       <div class="flex flex-wrap gap-1.5">
         {entry.technologies.map((tech) => (
-          <span class="rounded px-2 py-1 text-xs font-[500] bg-[var(--accent-dark)] text-[var(--text-primary)]">{tech}</span>
+          <span class={`rounded px-2 py-1 ${typography.pillSmall} bg-[var(--accent-dark)] text-[var(--text-primary)]`}>{tech}</span>
         ))}
       </div>
     </div>

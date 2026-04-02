@@ -2,9 +2,10 @@
 import { clock } from "../config/clock";
 import { theme } from "../config/theme";
 const { timezone, label: timezoneLabel } = clock;
+const { typography } = theme;
 ---
 
-<span id="live-clock" class="text-sm font-[300] tracking-[0.5px] text-[var(--text-dim)]">
+<span id="live-clock" class={`${typography.caption} tracking-[0.5px] text-[var(--text-dim)]`}>
   --:-- -- {timezoneLabel}
 </span>
 

@@ -1,16 +1,18 @@
 ---
 import { profile } from "../data/profile";
 import { skills } from "../data/skills";
+import { theme } from "../config/theme";
 const { bio } = profile;
+const { typography } = theme;
 ---
 
 <section id="about" class="px-6 py-24 lg:px-12 xl:px-24">
   <div class="mx-auto max-w-5xl">
-    <h2 data-animate class="text-[clamp(2rem,4.5vw,2.75rem)] font-[700] tracking-[-0.5px] text-[var(--text-primary)] mb-12">About</h2>
+    <h2 data-animate class={`${typography.heading} text-[var(--text-primary)] mb-12`}>About</h2>
     <div class="flex flex-col gap-12 md:flex-row md:gap-16">
       <div class="flex-1">
         {bio.map((paragraph) => (
-          <p data-animate data-split class="text-lg leading-relaxed text-[var(--text-muted)] mb-4">{paragraph}</p>
+          <p data-animate data-split class={`${typography.body} text-[var(--text-muted)] mb-4`}>{paragraph}</p>
         ))}
       </div>
       <div class="flex-shrink-0 flex justify-center md:justify-end">
@@ -19,7 +21,7 @@ const { bio } = profile;
     </div>
     <div class="mt-12 flex flex-wrap gap-2">
       {skills.map((skill) => (
-        <span class="skill-pill rounded px-3 py-1.5 text-sm font-[500] bg-[var(--accent-dark)] text-[var(--text-primary)]">{skill}</span>
+        <span class={`skill-pill rounded px-3 py-1.5 ${typography.pill} bg-[var(--accent-dark)] text-[var(--text-primary)]`}>{skill}</span>
       ))}
     </div>
   </div>

@@ -4,6 +4,31 @@
  * Extracted here so they can be tuned independently of component logic.
  */
 export const theme = {
+  /** Typography scale — single source of truth for all text styles.
+   *  Each token is a string of Tailwind classes (size, weight, tracking, leading).
+   *  Color and layout classes stay in the components. */
+  typography: {
+    display: "text-[clamp(2.5rem,6vw,5rem)] font-[800] tracking-[-2px]",
+    heading: "text-[clamp(2rem,4.5vw,2.75rem)] font-[700] tracking-[-0.5px]",
+    title: "text-2xl font-[700]",
+    subtitle: "text-xl font-[600]",
+    heroSubtitle: "text-[clamp(0.875rem,1.75vw,1rem)] font-[300] tracking-[3px] uppercase",
+    body: "text-lg leading-relaxed",
+    bodySmall: "text-base leading-relaxed",
+    accent: "text-base font-[500]",
+    caption: "text-sm font-[300]",
+    label: "text-xs font-[300] uppercase",
+    pill: "text-sm font-[500]",
+    pillSmall: "text-xs font-[500]",
+    nav: "text-base font-[400]",
+    navBrand: "text-base font-[600]",
+    navMobile: "text-3xl font-[600]",
+    button: "text-base font-[500]",
+    link: "text-base",
+    preloaderCounter: "text-[clamp(1.75rem,4.5vw,2.75rem)] font-[800] tracking-[-1px]",
+  },
+
+
   /** Lenis smooth scroll configuration */
   scroll: {
     duration: 1.2,

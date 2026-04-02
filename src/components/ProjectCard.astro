@@ -1,8 +1,10 @@
 ---
 import type { ProjectEntry } from "../data/projects";
+import { theme } from "../config/theme";
 interface Props { project: ProjectEntry; index: number; }
 const { project, index } = Astro.props;
 const isEven = index % 2 === 0;
+const { typography } = theme;
 ---
 
 <div class:list={["project-card flex flex-col gap-6 py-12 border-b border-[var(--border)] last:border-0", "lg:flex-row lg:gap-12 lg:items-center", { "lg:flex-row-reverse": !isEven }]} data-animate>
@@ -10,16 +12,16 @@ const isEven = index % 2 === 0;
     <div class="project-image aspect-video bg-[var(--surface)] border border-[var(--border)] rounded-lg flex items-center justify-center text-[var(--text-dim)] text-sm">{project.title} Preview</div>
   </div>
   <div class="lg:flex-1">
-    <h3 class="text-2xl font-[700] text-[var(--text-primary)] mb-3">{project.title}</h3>
-    <p class="text-base leading-relaxed text-[var(--text-muted)] mb-4">{project.description}</p>
+    <h3 class={`${typography.title} text-[var(--text-primary)] mb-3`}>{project.title}</h3>
+    <p class={`${typography.bodySmall} text-[var(--text-muted)] mb-4`}>{project.description}</p>
     <div class="flex flex-wrap gap-1.5 mb-4">
       {project.technologies.map((tech) => (
-        <span class="rounded px-2 py-1 text-xs font-[500] bg-[var(--accent-dark)] text-[var(--text-primary)]">{tech}</span>
+        <span class={`rounded px-2 py-1 ${typography.pillSmall} bg-[var(--accent-dark)] text-[var(--text-primary)]`}>{tech}</span>
       ))}
     </div>
     <div class="flex gap-4">
-      {project.liveUrl && (<a href={project.liveUrl} target="_blank" rel="noopener noreferrer" class="text-base text-[var(--accent)] hover:text-[var(--accent-secondary)] transition-colors duration-300">Live Site ↗</a>)}
-      {project.repoUrl && (<a href={project.repoUrl} target="_blank" rel="noopener noreferrer" class="text-base text-[var(--accent)] hover:text-[var(--accent-secondary)] transition-colors duration-300">GitHub ↗</a>)}
+      {project.liveUrl && (<a href={project.liveUrl} target="_blank" rel="noopener noreferrer" class={`${typography.link} text-[var(--accent)] hover:text-[var(--accent-secondary)] transition-colors duration-300`}>Live Site ↗</a>)}
+      {project.repoUrl && (<a href={project.repoUrl} target="_blank" rel="noopener noreferrer" class={`${typography.link} text-[var(--accent)] hover:text-[var(--accent-secondary)] transition-colors duration-300`}>GitHub ↗</a>)}
     </div>
   </div>
 </div>

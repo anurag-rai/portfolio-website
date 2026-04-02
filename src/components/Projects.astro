@@ -1,11 +1,13 @@
 ---
 import { projects } from "../data/projects";
 import ProjectCard from "./ProjectCard.astro";
+import { theme } from "../config/theme";
+const { typography } = theme;
 ---
 
 <section id="projects" class="px-6 py-24 lg:px-12 xl:px-24 overflow-hidden">
   <div class="mx-auto max-w-5xl">
-    <h2 data-animate class="text-[clamp(2rem,4.5vw,2.75rem)] font-[700] tracking-[-0.5px] text-[var(--text-primary)] mb-12">Projects</h2>
+    <h2 data-animate class={`${typography.heading} text-[var(--text-primary)] mb-12`}>Projects</h2>
     {projects.map((project, index) => (<ProjectCard project={project} index={index} />))}
   </div>
 </section>

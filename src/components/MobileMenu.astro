@@ -1,12 +1,14 @@
 ---
 import { navLinks } from "../data/navigation";
+import { theme } from "../config/theme";
+const { typography } = theme;
 ---
 
 <div id="mobile-menu" class="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-[var(--bg)] opacity-0 pointer-events-none md:hidden">
   <ul class="flex flex-col items-center gap-8">
     {navLinks.map(({ label, href }) => (
       <li>
-        <a href={href} class="mobile-nav-link text-3xl font-[600] text-[var(--text-primary)] hover:text-[var(--accent)] transition-colors duration-300 inline-block opacity-0 translate-y-4">{label}</a>
+        <a href={href} class={`mobile-nav-link ${typography.navMobile} text-[var(--text-primary)] hover:text-[var(--accent)] transition-colors duration-300 inline-block opacity-0 translate-y-4`}>{label}</a>
       </li>
     ))}
   </ul>

@@ -1,6 +1,8 @@
 ---
 import HeroScene from "./HeroScene.astro";
 import { profile } from "../data/profile";
+import { theme } from "../config/theme";
+const { typography } = theme;
 ---
 
 <section
@@ -15,13 +17,13 @@ import { profile } from "../data/profile";
   <div class="relative z-10 text-center px-6">
     <h1
       id="hero-title"
-      class="text-[clamp(2.5rem,6vw,5rem)] font-[800] tracking-[-2px] text-[var(--text-primary)]"
+      class={`${typography.display} text-[var(--text-primary)]`}
     >
       {profile.name.toUpperCase()}
     </h1>
     <p
       id="hero-subtitle"
-      class="mt-3 text-[clamp(0.875rem,1.75vw,1rem)] font-[300] tracking-[3px] uppercase text-[var(--text-muted)]"
+      class={`mt-3 ${typography.heroSubtitle} text-[var(--text-muted)]`}
     >
       {profile.title}
     </p>
@@ -32,7 +34,7 @@ import { profile } from "../data/profile";
     id="scroll-indicator"
     class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-0"
   >
-    <span class="text-xs font-[300] tracking-[2px] uppercase text-[var(--text-dim)]">Scroll</span>
+    <span class={`${typography.label} tracking-[2px] text-[var(--text-dim)]`}>Scroll</span>
     <div class="h-6 w-px bg-[var(--text-dim)] animate-pulse"></div>
   </div>
 </section>
