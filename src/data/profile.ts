@@ -7,8 +7,8 @@ export const profile = {
     "Software engineer building modern, scalable web applications. Explore my experience, projects, and get in touch.",
 
   social: {
-    github: "https://github.com/anuragrai",
-    linkedin: "https://linkedin.com/in/anuragrai",
+    github: "https://github.com/anurag-rai/",
+    linkedin: "https://www.linkedin.com/in/anuragrai7/",
   },
 
   /** Bio paragraphs displayed in the About section */
