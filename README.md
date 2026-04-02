@@ -10,10 +10,12 @@ A single-page developer portfolio with cinematic scroll animations, a dark monoc
 | ---------------------------------------------------- | -------------------------------------------------------- |
 | [Astro v6](https://astro.build)                      | Static site generator with islands architecture          |
 | [Tailwind CSS v4](https://tailwindcss.com)           | Utility-first styling via Vite plugin                    |
+| [TypeScript](https://www.typescriptlang.org)         | Full-stack type safety                                   |
 | [GSAP](https://gsap.com) + ScrollTrigger             | Scroll-driven animations and timeline coordination       |
 | [Lenis](https://lenis.darkroom.engineering)          | Smooth scroll with GSAP ticker sync                      |
 | [Three.js](https://threejs.org)                      | 3D wireframe polyhedra in the hero section (lazy-loaded) |
-| [Playwright](https://playwright.dev)                 | End-to-end behavior-based testing                        |
+| [Playwright](https://playwright.dev)                 | End-to-end behavior-based testing (3 device profiles)    |
+| [Vitest](https://vitest.dev)                         | Unit testing for utility functions                       |
 | [Manrope](https://fonts.google.com/specimen/Manrope) | Geometric sans-serif typeface (300--800 weights)         |
 
 ## Quick Start
@@ -44,17 +46,27 @@ The site is a single-page Astro application that outputs fully static HTML at bu
 ```
 ├── astro.config.mjs              # Astro config with Tailwind v4 Vite plugin + @astrojs/sitemap
 ├── playwright.config.ts          # Test device matrix (Desktop Chrome, iPhone 14, iPad Mini)
+├── vitest.config.ts              # Vitest config for unit tests (src/**/*.test.ts)
 ├── tsconfig.json                 # Extends astro/tsconfigs/strict
+├── eslint.config.js              # ESLint flat config with typescript-eslint + prettier
+├── .prettierrc                   # Prettier config (100 char width, 2-space indent)
+├── cspell.json                   # Spell-check dictionary and file patterns
 ├── package.json
 ├── public/
 │   ├── favicon.svg
 │   └── robots.txt                # Crawl directives + sitemap reference
 ├── src/
 │   ├── config/
-│   │   ├── site.ts               # Personal data: name, title, email, social links, nav items
-│   │   └── theme.ts              # Animation timings, scroll behavior, cursor settings
+│   │   ├── theme.ts              # Animation timings, scroll behavior, cursor settings
+│   │   └── clock.ts              # IST timezone configuration for footer clock
+│   ├── data/
+│   │   ├── profile.ts            # Personal data: name, title, email, social links, bio
+│   │   ├── experience.ts         # ExperienceEntry[] for timeline section
+│   │   ├── projects.ts           # ProjectEntry[] with optional live/repo URLs
+│   │   ├── skills.ts             # Skill tags for About section
+│   │   └── navigation.ts         # Nav section IDs and labels
 │   ├── layouts/
-│   │   └── Layout.astro          # Base HTML shell, meta tags, font loading, global script init
+│   │   └── Layout.astro          # Base HTML shell, meta tags, JSON-LD, font loading, global scripts
 │   ├── pages/
 │   │   └── index.astro           # Single page composing all section components
 │   ├── components/
@@ -73,7 +85,11 @@ The site is a single-page Astro application that outputs fully static HTML at bu
 │   │   ├── FooterGrass.astro     # Animated procedural grass canvas with click-to-toast easter egg
 │   │   ├── Clock.astro           # Live IST time display, updates every second
 │   │   ├── CustomCursor.astro    # Dot + circle cursor, only on pointer:fine devices
-│   │   └── ScrollProgress.astro  # Gradient progress bar fixed at top of viewport
+│   │   ├── ScrollProgress.astro  # Gradient progress bar fixed at top of viewport
+│   │   └── design-system/        # Reusable progress visualization components
+│   │       ├── ProgressRing.astro
+│   │       ├── WireframeSphere.astro
+│   │       └── OrbitalDots.astro
 │   ├── scripts/
 │   │   ├── animations.ts         # Generic data-animate reveal + manual character split
 │   │   ├── smooth-scroll.ts      # Lenis init + GSAP ticker sync + ScrollTrigger bridge
@@ -83,15 +99,16 @@ The site is a single-page Astro application that outputs fully static HTML at bu
 │   │   └── grass.ts              # Procedural grass canvas renderer with wind animation
 │   ├── styles/
 │   │   └── global.css            # CSS custom properties, reset, accessibility utilities
-│   └── data/
-│       ├── experience.ts         # ExperienceEntry[] with date formatting helpers
-│       └── projects.ts           # ProjectEntry[] with optional live/repo URLs
-└── tests/                        # Playwright E2E tests (see CONTRIBUTING.md)
+│   └── utils/
+│       ├── dates.ts              # formatDate() and calcDuration() helpers
+│       └── dates.test.ts         # Vitest unit tests for date utilities
+└── tests/                        # Playwright E2E tests (15 spec files, see CONTRIBUTING.md)
+    └── helpers.ts                # Shared test utilities
 ```
 
 ## Design System
 
-All personal data (name, email, social links, bio, skills, timezone) lives in `src/config/site.ts`. Animation and interaction tuning (scroll duration, stagger delays, cursor sizes, preloader timing) lives in `src/config/theme.ts`. Components import from these files rather than hardcoding values.
+All personal data (name, email, social links, bio) lives in `src/data/profile.ts`. Skills, experience entries, project entries, and navigation items each have their own file in `src/data/`. Animation and interaction tuning (scroll duration, stagger delays, cursor sizes, preloader timing) lives in `src/config/theme.ts`. Timezone configuration lives in `src/config/clock.ts`. Components import from these files rather than hardcoding values.
 
 ### Color Tokens
 
@@ -103,8 +120,8 @@ Defined as CSS custom properties in `src/styles/global.css`. Dark monochrome bas
 | `--surface`          | `#1a1a1a`       | Cards, nav, elevated surfaces         |
 | `--border`           | `#2a2a2a`       | Borders, dividers                     |
 | `--text-primary`     | `#ffffff`       | Headings, primary text                |
-| `--text-muted`       | `#888888`       | Body text, descriptions               |
-| `--text-dim`         | `#808080`       | Subtle text, timestamps, icons        |
+| `--text-muted`       | `#aaaaaa`       | Body text, descriptions               |
+| `--text-dim`         | `#999999`       | Subtle text, timestamps, icons        |
 | `--accent`           | `#cb997e`       | Primary accent (terracotta)           |
 | `--accent-secondary` | `#ddbea9`       | Hover states (peach)                  |
 | `--accent-highlight` | `#ffe8d6`       | Emphasis (cream)                      |
@@ -228,19 +245,19 @@ Props shared across all three: `progress` (0-100), `size` (pixels). See JSDoc in
 | Component        | Purpose                                                                                                                                                                                                        | Data Source                                      |
 | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
 | `Preloader`      | Tracks real asset loading and displays an icosahedron that draws itself edge by edge as progress advances. Counter shows percentage. Wipes upward on completion and dispatches `preloader-complete` event.     | Internal asset tracking                          |
-| `Hero`           | Full-viewport intro with character-stagger animation on name and subtitle. Waits for `preloader-complete` before animating. Includes scroll indicator.                                                         | `src/config/site.ts`                             |
+| `Hero`           | Full-viewport intro with character-stagger animation on name and subtitle. Waits for `preloader-complete` before animating. Includes scroll indicator.                                                         | `src/data/profile.ts`                            |
 | `HeroScene`      | Mounts a `<canvas>` for Three.js. Checks WebGL support before lazy-importing `hero-scene.ts`. Dispatches `hero-scene-ready` when loaded.                                                                       | `src/scripts/hero-scene.ts`                      |
-| `Navbar`         | Fixed header that appears after scrolling past the hero (ScrollTrigger). Tracks active section and highlights the corresponding link. Smooth scrolls on click.                                                 | `src/config/site.ts`                             |
-| `MobileMenu`     | Full-screen overlay triggered by hamburger button. Animates links with stagger. Closes on link click, Escape key, or overlay click. Locks body scroll while open.                                              | `src/config/site.ts`                             |
-| `About`          | Bio section with paragraphs (character split reveal) and a grid of skill pills (staggered fade-in). Photo placeholder.                                                                                         | `src/config/site.ts`                             |
+| `Navbar`         | Fixed header that appears after scrolling past the hero (ScrollTrigger). Tracks active section and highlights the corresponding link. Smooth scrolls on click.                                                 | `src/data/navigation.ts`                         |
+| `MobileMenu`     | Full-screen overlay triggered by hamburger button. Animates links with stagger. Closes on link click, Escape key, or overlay click. Locks body scroll while open.                                              | `src/data/navigation.ts`                         |
+| `About`          | Bio section with paragraphs (character split reveal) and a grid of skill pills (staggered fade-in). Photo placeholder.                                                                                         | `src/data/profile.ts`, `src/data/skills.ts`      |
 | `Experience`     | Vertical timeline powered by `src/data/experience.ts`. Renders `TimelineNode` for each entry. Scroll-synced progress line tracks reading position.                                                             | `ExperienceEntry[]`                              |
 | `TimelineNode`   | Single timeline entry. Shows role, company, formatted date range with calculated duration. Expands to reveal description and tech tags when scrolled into the viewport center.                                 | Props: `entry: ExperienceEntry`, `index: number` |
 | `Projects`       | Renders `ProjectCard` for each entry in `src/data/projects.ts`. Cards alternate slide direction (left/right) with parallax on the image placeholder.                                                           | `ProjectEntry[]`                                 |
 | `ProjectCard`    | Single project with title, description, tech tags, and optional Live Site / GitHub links. Even-indexed cards have image on the left; odd-indexed have it on the right.                                         | Props: `project: ProjectEntry`, `index: number`  |
-| `Contact`        | CTA section with "Get In Touch" button that copies email to clipboard (with textarea fallback for older browsers). Triggers a toast via the shared toast system. Social icons for GitHub, LinkedIn, and email. | `src/config/site.ts`                             |
+| `Contact`        | CTA section with "Get In Touch" button that copies email to clipboard (with textarea fallback for older browsers). Triggers a toast via the shared toast system. Social icons for GitHub, LinkedIn, and email. | `src/data/profile.ts`                            |
 | `Footer`         | Copyright line (year set at build time) and live clock. Separated by a gradient `--gradient-earth` line. Houses the animated grass easter egg.                                                                 | `Clock`, `FooterGrass` child components          |
 | `FooterGrass`    | Procedural canvas-based grass silhouette with wind animation. Clicking triggers a toast. Blade density scales with viewport width. Respects `prefers-reduced-motion`.                                          | `src/scripts/grass.ts`, `src/config/theme.ts`    |
-| `Clock`          | Displays current time in the configured timezone, formatted with `Intl.DateTimeFormat`, updated every second.                                                                                                  | `src/config/site.ts`                             |
+| `Clock`          | Displays current time in the configured timezone, formatted with `Intl.DateTimeFormat`, updated every second.                                                                                                  | `src/config/clock.ts`                            |
 | `CustomCursor`   | Creates a dot and circle that follow the mouse. Only activates on `pointer: fine` devices. Scales up on hover over links, buttons, and project cards. Hides the native cursor.                                 | `src/scripts/cursor.ts`                          |
 | `ScrollProgress` | A 3px-high fixed bar at the top of the viewport with `--gradient-earth` background. Width is scrubbed from 0% to 100% via ScrollTrigger as the user scrolls.                                                   | ScrollTrigger scrub                              |
 

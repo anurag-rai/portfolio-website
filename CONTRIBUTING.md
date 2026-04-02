@@ -23,20 +23,23 @@ All dependency versions in `package.json` are **pinned** (no `^` or `~` ranges).
 
 Always use `npm run <script>` instead of running tools directly with `npx`.
 
-| Command                | Description                                       |
-| ---------------------- | ------------------------------------------------- |
-| `npm run dev`          | Start local dev server at `localhost:4321`        |
-| `npm run build`        | Build for production to `dist/`                   |
-| `npm run preview`      | Preview the production build locally              |
-| `npm run typecheck`    | Run TypeScript type checking (no emit)            |
-| `npm run lint`         | Run ESLint on TypeScript/JS files                 |
-| `npm run lint:fix`     | Run ESLint with auto-fix                          |
-| `npm run format`       | Format all files with Prettier                    |
-| `npm run format:check` | Check formatting without writing                  |
-| `npm run spellcheck`   | Run cspell on source, test, and markdown files    |
-| `npm run test`         | Run all Playwright tests (all devices)            |
-| `npm run test:headed`  | Run tests with a visible browser window           |
-| `npm run test:debug`   | Run tests in Playwright debug mode (step-through) |
+| Command                  | Description                                       |
+| ------------------------ | ------------------------------------------------- |
+| `npm run dev`            | Start local dev server at `localhost:4321`        |
+| `npm run dev:mobile`     | Start dev server with `--host` for network access |
+| `npm run build`          | Build for production to `dist/`                   |
+| `npm run preview`        | Preview the production build locally              |
+| `npm run typecheck`      | Run TypeScript type checking (no emit)            |
+| `npm run lint`           | Run ESLint on TypeScript/JS files                 |
+| `npm run lint:fix`       | Run ESLint with auto-fix                          |
+| `npm run format`         | Format all files with Prettier                    |
+| `npm run format:check`   | Check formatting without writing                  |
+| `npm run spellcheck`     | Run cspell on source, test, and markdown files    |
+| `npm run test`           | Run all Playwright E2E tests (all devices)        |
+| `npm run test:headed`    | Run E2E tests with a visible browser window       |
+| `npm run test:debug`     | Run E2E tests in Playwright debug mode            |
+| `npm run test:unit`      | Run Vitest unit tests                             |
+| `npm run test:unit:watch`| Run Vitest in watch mode                          |
 
 ## Commit Convention
 
@@ -77,13 +80,11 @@ If any hook fails, the commit is blocked. Fix the issue and try again.
 
 ## Testing
 
-Start the dev server, then run tests in a separate terminal:
+### E2E Tests (Playwright)
+
+Playwright automatically builds the site and starts a preview server before running tests (configured in `playwright.config.ts`). Just run:
 
 ```bash
-# Terminal 1
-npm run dev
-
-# Terminal 2
 npm run test
 ```
 
@@ -103,6 +104,15 @@ Run tests for a specific device only:
 
 ```bash
 npm run test -- --project="iPhone 14"
+```
+
+### Unit Tests (Vitest)
+
+Unit tests live alongside source files (`src/**/*.test.ts`). Currently covers date utility functions.
+
+```bash
+npm run test:unit            # single run
+npm run test:unit:watch      # watch mode
 ```
 
 ### Device Matrix
