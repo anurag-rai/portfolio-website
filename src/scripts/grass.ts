@@ -114,6 +114,8 @@ export function initGrass(canvas: HTMLCanvasElement) {
   rafId = requestAnimationFrame(draw);
 
   window.addEventListener("resize", () => {
+    const newW = canvas.clientWidth;
+    if (newW === w) return;
     cancelAnimationFrame(rafId);
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     w = resize();
