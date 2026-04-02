@@ -7,6 +7,6 @@ export default tseslint.config(
   ...tseslint.configs.recommended,
   eslintConfigPrettier,
   {
-    ignores: ["dist/", "node_modules/", ".astro/", "test-results/"],
+    ignores: ["dist/", "node_modules/", ".astro/", "test-results/", "scripts/"],
   },
 );

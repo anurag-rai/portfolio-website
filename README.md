@@ -1,6 +1,7 @@
 # Portfolio
 
 [![CI](https://github.com/anurag-rai/portfolio-website/actions/workflows/ci.yml/badge.svg)](https://github.com/anurag-rai/portfolio-website/actions/workflows/ci.yml)
+![Coverage](coverage/badge.svg)
 
 A single-page developer portfolio with cinematic scroll animations, a dark monochrome theme with earthy accent colors, and an experience-focused layout. Built with Astro, GSAP, and Three.js.
 
@@ -15,7 +16,7 @@ A single-page developer portfolio with cinematic scroll animations, a dark monoc
 | [Lenis](https://lenis.darkroom.engineering)          | Smooth scroll with GSAP ticker sync                      |
 | [Three.js](https://threejs.org)                      | 3D wireframe polyhedra in the hero section (lazy-loaded) |
 | [Playwright](https://playwright.dev)                 | End-to-end behavior-based testing (3 device profiles)    |
-| [Vitest](https://vitest.dev)                         | Unit testing for utility functions                       |
+| [Vitest](https://vitest.dev)                         | Unit testing for data, config, scripts, and utilities    |
 | [Manrope](https://fonts.google.com/specimen/Manrope) | Geometric sans-serif typeface (300--800 weights)         |
 
 ## Quick Start
