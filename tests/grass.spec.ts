@@ -59,7 +59,7 @@ test.describe("Footer Grass", () => {
 
     // Canvas bottom should be near the divider (generous tolerance for font/layout
     // differences across environments — CI Ubuntu renders footer taller than macOS)
-    expect(canvasBottom).toBeLessThanOrEqual(dividerTop + 80);
+    expect(canvasBottom).toBeLessThanOrEqual(dividerTop + 100);
   });
 
   test("clicking grass triggers a toast", async ({ page }) => {

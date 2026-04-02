@@ -47,7 +47,7 @@
 
   body {
     background:
-      radial-gradient(ellipse 70% 50% at 10% 95%, rgba(203,153,126,0.05) 0%, transparent 70%),
+      radial-gradient(ellipse 70% 50% at 10% 95%, rgba(203, 153, 126, 0.05) 0%, transparent 70%),
       linear-gradient(170deg, #0b0b0b 0%, #0e0e0e 40%, #110f0d 65%, #16120f 100%);
     background-attachment: fixed;
     color: var(--text-primary);

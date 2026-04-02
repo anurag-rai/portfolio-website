@@ -28,7 +28,6 @@ export const theme = {
     preloaderCounter: "text-[clamp(2rem,5vw,3rem)] font-[800] tracking-[-1px]",
   },
 
-
   /** Lenis smooth scroll configuration */
   scroll: {
     duration: 1.2,

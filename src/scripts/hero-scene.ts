@@ -15,9 +15,7 @@ import { theme } from "../config/theme";
  * @returns Cleanup function that removes event listeners and disposes the renderer.
  */
 export function initHeroScene(container: HTMLElement) {
-  const prefersReducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  ).matches;
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const {
     cameraZ,
     wireframeOpacity,
@@ -38,10 +36,7 @@ export function initHeroScene(container: HTMLElement) {
     maxShapes,
   } = theme.heroScene;
 
-  const resolution = new THREE.Vector2(
-    container.clientWidth,
-    container.clientHeight,
-  );
+  const resolution = new THREE.Vector2(container.clientWidth, container.clientHeight);
 
   const scene = new THREE.Scene();
   const fov = 50;
@@ -76,9 +71,7 @@ export function initHeroScene(container: HTMLElement) {
   ];
 
   // Build 5-point: triangular bipyramid (two tetrahedra sharing a face)
-  const v5 = [
-    0, 0.6, 0, 0, -0.6, 0, 0.5, 0, 0.3, -0.5, 0, 0.3, 0, 0, -0.5,
-  ];
+  const v5 = [0, 0.6, 0, 0, -0.6, 0, 0.5, 0, 0.3, -0.5, 0, 0.3, 0, 0, -0.5];
   const i5 = [0, 2, 3, 0, 3, 4, 0, 4, 2, 1, 3, 2, 1, 4, 3, 1, 2, 4];
   baseGeometries[1].setAttribute(
     "position",
@@ -121,8 +114,8 @@ export function initHeroScene(container: HTMLElement) {
   }
   v9.push(0, -0.7, 0, 0, 0.7, 0, 0, 0, 0);
   const i9 = [
-    0, 1, 2, 3, 5, 4, 0, 3, 1, 1, 3, 4, 1, 4, 2, 2, 4, 5, 2, 5, 0, 0, 5, 3,
-    6, 0, 1, 6, 1, 2, 6, 2, 0, 7, 4, 3, 7, 5, 4, 7, 3, 5,
+    0, 1, 2, 3, 5, 4, 0, 3, 1, 1, 3, 4, 1, 4, 2, 2, 4, 5, 2, 5, 0, 0, 5, 3, 6, 0, 1, 6, 1, 2, 6, 2,
+    0, 7, 4, 3, 7, 5, 4, 7, 3, 5,
   ];
   baseGeometries[5].setAttribute(
     "position",
@@ -140,10 +133,7 @@ export function initHeroScene(container: HTMLElement) {
 
   // Shape count scales with container pixel area
   const pixelArea = container.clientWidth * container.clientHeight;
-  const shapeCount = Math.max(
-    minShapes,
-    Math.min(maxShapes, Math.round(pixelArea / shapeDensity)),
-  );
+  const shapeCount = Math.max(minShapes, Math.min(maxShapes, Math.round(pixelArea / shapeDensity)));
 
   // Fibonacci spiral placement: shapes radiate from center outward
   // with golden-angle spacing, scaled to fill the visible rectangle.
@@ -217,10 +207,7 @@ export function initHeroScene(container: HTMLElement) {
     window.addEventListener("deviceorientation", (e) => {
       if (e.gamma === null || e.beta === null) return;
       const gamma = Math.max(-tiltMaxAngle, Math.min(tiltMaxAngle, e.gamma));
-      const beta = Math.max(
-        -tiltMaxAngle,
-        Math.min(tiltMaxAngle, e.beta - tiltBetaOffset),
-      );
+      const beta = Math.max(-tiltMaxAngle, Math.min(tiltMaxAngle, e.beta - tiltBetaOffset));
       cursorX = (gamma / tiltMaxAngle) * 3;
       cursorY = -(beta / tiltMaxAngle) * 2;
     });
@@ -261,10 +248,8 @@ export function initHeroScene(container: HTMLElement) {
     shapes.forEach((shape, i) => {
       const drift = driftConfigs[i];
 
-      const driftX =
-        Math.sin(time * drift.freqX + drift.phaseX) * drift.amplitude;
-      const driftY =
-        Math.cos(time * drift.freqY + drift.phaseY) * drift.amplitude;
+      const driftX = Math.sin(time * drift.freqX + drift.phaseX) * drift.amplitude;
+      const driftY = Math.cos(time * drift.freqY + drift.phaseY) * drift.amplitude;
 
       const dx = shape.home.x - cursorX;
       const dy = shape.home.y - cursorY;
@@ -318,9 +303,7 @@ export function initHeroScene(container: HTMLElement) {
         const bx = shapes[b].mesh.position.x;
         const by = shapes[b].mesh.position.y;
         const bz = shapes[b].mesh.position.z;
-        const dist = Math.sqrt(
-          (ax - bx) ** 2 + (ay - by) ** 2 + (az - bz) ** 2,
-        );
+        const dist = Math.sqrt((ax - bx) ** 2 + (ay - by) ** 2 + (az - bz) ** 2);
         if (dist < connectionRadius) {
           const fade = 1 - dist / connectionRadius;
           const r = baseColor.r * fade;
