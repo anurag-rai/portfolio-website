@@ -3,6 +3,8 @@ name: CI
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   typecheck:
@@ -74,6 +76,7 @@ jobs:
           name: coverage-badge
           path: coverage/badge.svg
       - name: Update coverage badge
+        if: github.event_name == 'push'
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "chore: update coverage badge"
