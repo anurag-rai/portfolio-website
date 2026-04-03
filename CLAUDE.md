@@ -27,12 +27,15 @@
 - E2E tests use Chromium only in CI (no WebKit). Mobile viewports are tested via Chromium device emulation.
 - Playwright config uses `process.env.CI` — it is excluded from tsconfig to avoid needing `@types/node`.
 - Pixel-position assertions in E2E tests need generous tolerance (80px+) for cross-environment rendering differences between macOS and Ubuntu CI runners.
+- After pushing changes that affect CI, monitor the run with `gh run watch` before moving on.
+- The unit-tests job needs `permissions: contents: write` for the coverage badge auto-commit step.
 
 ## Git
 
 - Commit messages must be a single line. No multi-line bodies, no `Co-Authored-By` trailers.
 - The commit-msg hook only allows these prefixes: feat, fix, chore, docs, test.
 - When configuring CI actions that create commits, use one of these prefixes.
+- When committing unrelated changes, use separate commits (one logical change per commit).
 
 ## Testing
 
