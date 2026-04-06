@@ -4,8 +4,9 @@ export const skills = [
   "JavaScript",
   "NodeJS",
   "Java",
+  "Erlang",
   "React",
-  "MUI",
+  "HTML/CSS",
   "MongoDB",
   "PostgreSQL",
   "Redis",
@@ -14,4 +15,7 @@ export const skills = [
   "AWS",
   "AWS CDK",
   "Terraform",
+  "Microservices",
+  "single-spa",
+  "LLM/AI Integration",
 ] as const;

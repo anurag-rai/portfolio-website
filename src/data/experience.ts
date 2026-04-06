@@ -82,7 +82,9 @@ export const experiences: ExperienceEntry[] = [
     company: "AIMA Code",
     startDate: "2016-04",
     endDate: "2016-07",
-    description: ["Implemented algorithms for <strong>First-Order and Propositional Logic.</strong>"],
+    description: [
+      "Implemented algorithms for <strong>First-Order and Propositional Logic.</strong>",
+    ],
     technologies: ["Java", "ANTLR", "JUnit"],
   },
 ];
