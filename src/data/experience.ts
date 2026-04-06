@@ -50,8 +50,8 @@ export const experiences: ExperienceEntry[] = [
     startDate: "2021-07",
     endDate: "2022-04",
     description: [
-      "Designed and implemented a highly available configuration management system for Amazon warehouses, enabling the launch of a greenfield project.",
-      "Developed a deployment workflow to distribute UI artifacts across multiple global regions for a multi-tenant frontend application, ensuring reliable and scalable application rollouts.",
+      "Designed and implemented a <strong>highly available configuration management system</strong> for Amazon warehouses, enabling the launch of a <strong>greenfield project.</strong>",
+      "Developed a deployment workflow to distribute UI artifacts across <strong>multiple global regions</strong> for a multi-tenant frontend application, ensuring <strong>reliable and scalable application rollouts.</strong>",
     ],
     technologies: ["TypeScript", "Java", "React", "AWS CDK", "AWS", "DynamoDB"],
   },
@@ -61,8 +61,8 @@ export const experiences: ExperienceEntry[] = [
     startDate: "2018-12",
     endDate: "2021-07",
     description: [
-      "Developed multiple RESTful microservices from inception to deployment as part of a domain-driven service-oriented architecture and integrated with multiple third-party services—including financial brokerage firms and payment solutions—to support stock transactions for over 4.5 million users.",
-      "Developed and scaled critical services such as a notification system delivering 1 million+ daily notifications and a distributed cron service executing 1,000+ business-critical jobs daily.",
+      "Developed multiple RESTful microservices from inception to deployment as part of a domain-driven service-oriented architecture and integrated with multiple third-party services—including financial brokerage firms and payment solutions—to support stock transactions for <strong>over 4.5 million users.</strong>",
+      "Developed and scaled critical services such as a notification system delivering <strong>1 million+ daily notifications</strong> and a distributed cron service executing <strong>1,000+ business-critical jobs daily.</strong>",
     ],
     technologies: ["JavaScript", "NodeJS", "Kafka", "MongoDB", "Redis"],
   },
@@ -72,8 +72,8 @@ export const experiences: ExperienceEntry[] = [
     startDate: "2017-08",
     endDate: "2018-11",
     description: [
-      "Developed an event-driven service with both push-based (webhooks/events) and pull-based (REST API) capabilities providing real-time order lifecycle visibility for warehouse operations.",
-      "Built an internal tool to detect SLA breaches, improving operational efficiency.",
+      "Developed an event-driven service with both push-based (webhooks/events) and pull-based (REST API) capabilities providing <strong>real-time order lifecycle visibility</strong> for warehouse operations.",
+      "Built an internal tool to detect SLA breaches, <strong>improving operational efficiency.</strong>",
     ],
     technologies: ["Erlang", "Mnesia", "Python", "RabbitMQ"],
   },
@@ -82,7 +82,7 @@ export const experiences: ExperienceEntry[] = [
     company: "AIMA Code",
     startDate: "2016-04",
     endDate: "2016-07",
-    description: ["Implemented algorithms for First-Order and Propositional Logic."],
+    description: ["Implemented algorithms for <strong>First-Order and Propositional Logic.</strong>"],
     technologies: ["Java", "ANTLR", "JUnit"],
   },
 ];
