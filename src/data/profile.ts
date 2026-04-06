@@ -13,7 +13,7 @@ export const profile = {
 
   /** Bio paragraphs displayed in the About section */
   bio: [
-    "I'm a software engineer who builds modern, scalable web applications. I care about clean architecture, thoughtful user experiences, and shipping code that works reliably at scale.",
-    "Currently focused on real-time systems and distributed architectures. I enjoy the intersection of engineering rigor and creative problem-solving.",
+    "I design and build distributed systems that handle millions of daily requests, save millions in costs, and ship to users in minutes instead of days. Full-stack across the board — APIs, microservices, event-driven architectures, cloud infrastructure on AWS — across healthcare, fintech, and logistics.",
+    "I build AI-powered products and use AI daily as a core part of how I write code, review PRs, and ship faster.",
   ],
 } as const;
