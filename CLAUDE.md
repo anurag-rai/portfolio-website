@@ -6,6 +6,7 @@
 - Use `npm ci` (not `npm install`) to install dependencies.
 - All dependency versions are pinned (no `^` or `~`). When adding dependencies use `npm install --save-exact`.
 - Always use `npm run <script>` instead of running tools directly with `npx`.
+- `npm run test:unit` runs vitest. `npm run test` runs Playwright E2E. Don't confuse them.
 
 ## Astro Conventions
 
@@ -27,6 +28,7 @@
 - E2E tests use Chromium only in CI (no WebKit). Mobile viewports are tested via Chromium device emulation.
 - Playwright config uses `process.env.CI` — it is excluded from tsconfig to avoid needing `@types/node`.
 - Pixel-position assertions in E2E tests need generous tolerance (80px+) for cross-environment rendering differences between macOS and Ubuntu CI runners.
+- Before pushing, run `npm run spellcheck` and `npm run format:check` on the full repo. lint-staged (pre-commit) only checks staged files — CI checks everything, so these can diverge.
 - After pushing changes that affect CI, monitor the run with `gh run watch` before moving on.
 - The unit-tests job needs `permissions: contents: write` for the coverage badge auto-commit step.
 
