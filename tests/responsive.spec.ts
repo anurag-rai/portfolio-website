@@ -8,7 +8,7 @@ test.describe("Responsive Layout", () => {
   });
 
   test("all sections are present and visible on scroll", async ({ page }) => {
-    const sections = ["hero", "about", "experience", "projects", "contact"];
+    const sections = ["hero", "about", "experience", "contact"];
     for (const id of sections) {
       const section = page.locator(`#${id}`);
       await expect(section).toBeAttached();
@@ -36,7 +36,7 @@ test.describe("Responsive Layout", () => {
 
   // Regression: horizontal swipe on iOS revealed blank black space to the right.
   // Fix: overflow-x: hidden + overscroll-behavior-x: none on html/body,
-  // plus overflow-hidden on the Projects section (GSAP slide-in source).
+  // plus overflow-hidden on sections with GSAP slide-in animations.
   test("no horizontal scroll at any scroll position", async ({ page }) => {
     const positions = [
       0, // top

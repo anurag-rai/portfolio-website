@@ -36,7 +36,7 @@ test.describe("Navigation", () => {
 
     await scrollPastHero(page);
 
-    const sections = ["about", "experience", "projects", "contact"];
+    const sections = ["about", "experience", "contact"];
     for (const section of sections) {
       const link = page
         .locator(`header a:has-text("${section}")`, { hasText: new RegExp(section, "i") })

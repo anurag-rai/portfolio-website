@@ -35,7 +35,7 @@ test.describe("Accessibility", () => {
     // Multiple h2s (one per section)
     const h2s = page.locator("h2");
     const h2Count = await h2s.count();
-    expect(h2Count).toBeGreaterThanOrEqual(4); // About, Experience, Projects, Contact
+    expect(h2Count).toBeGreaterThanOrEqual(3); // About, Experience, Contact
   });
 
   test("semantic landmarks are present", async ({ page }) => {
