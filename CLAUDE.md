@@ -37,6 +37,11 @@
 - When configuring CI actions that create commits, use one of these prefixes.
 - When committing unrelated changes, use separate commits (one logical change per commit).
 
+## E2E Tests
+
+- E2E tests run on port 4322 (not 4321) to avoid colliding with the dev server.
+- If tests fail with "strict mode violation" on `<header>` or unexpected h1 counts, check if a dev server is running on 4321 and verify `devToolbar` is disabled in astro.config.mjs.
+
 ## Testing
 
 - Use Playwright as a debugging tool, not just a test runner. For "X doesn't work in the browser" issues, write a diagnostic spec that inspects `elementFromPoint`, stacking context, and computed styles before attempting a fix.
