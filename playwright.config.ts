@@ -11,17 +11,20 @@ const TEST_DEVICES = {
   "iPad Mini": { ...devices["iPad Mini"], defaultBrowserType: "chromium" as const },
 };
 
+// Use a dedicated port for E2E preview so it never collides with the dev server (4321)
+const E2E_PORT = 4322;
+
 export default defineConfig({
   testDir: "./tests",
   timeout: IS_CI ? 60000 : 30000,
   retries: IS_CI ? 1 : 0,
   use: {
-    baseURL: "http://localhost:4321",
+    baseURL: `http://localhost:${E2E_PORT}`,
     actionTimeout: IS_CI ? 15000 : 10000,
   },
   webServer: {
-    command: "npm run build && npm run preview",
-    url: "http://localhost:4321",
+    command: `npm run build && npm run preview -- --port ${E2E_PORT}`,
+    url: `http://localhost:${E2E_PORT}`,
     reuseExistingServer: !IS_CI,
   },
   projects: Object.entries(TEST_DEVICES).map(([name, use]) => ({ name, use })),
