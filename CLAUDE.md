@@ -30,7 +30,8 @@
 - Pixel-position assertions in E2E tests need generous tolerance (80px+) for cross-environment rendering differences between macOS and Ubuntu CI runners.
 - Before pushing, run `npm run spellcheck` and `npm run format:check` on the full repo. lint-staged (pre-commit) only checks staged files — CI checks everything, so these can diverge.
 - After pushing changes that affect CI, monitor the run with `gh run watch` before moving on.
-- The unit-tests job needs `permissions: contents: write` for the coverage badge auto-commit step.
+- The unit-tests and lighthouse jobs need `permissions: contents: write` for auto-commit steps.
+- Auto-commit steps (coverage badge, lighthouse scores) require a `BADGE_PUSH_TOKEN` repository secret (Fine-grained PAT with `contents: write` for this repo) to bypass branch protection. Without it, auto-commits silently fail and badges must be committed manually.
 
 ## Git
 

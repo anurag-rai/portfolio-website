@@ -62,6 +62,8 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v6
+        with:
+          token: ${{ secrets.BADGE_PUSH_TOKEN || github.token }}
       - uses: actions/setup-node@v6
         with:
           node-version: 22
@@ -77,6 +79,7 @@ jobs:
           path: coverage/badge.svg
       - name: Update coverage badge
         if: github.event_name == 'push'
+        continue-on-error: ${{ !secrets.BADGE_PUSH_TOKEN }}
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "chore: update coverage badge"
@@ -107,6 +110,8 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v6
+        with:
+          token: ${{ secrets.BADGE_PUSH_TOKEN || github.token }}
       - uses: actions/setup-node@v6
         with:
           node-version: 22
@@ -140,7 +145,7 @@ jobs:
           retention-days: 90
       - name: Update Lighthouse scores
         if: github.event_name == 'push'
-        continue-on-error: true
+        continue-on-error: ${{ !secrets.BADGE_PUSH_TOKEN }}
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "chore: update lighthouse scores"
