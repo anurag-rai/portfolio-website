@@ -98,5 +98,25 @@
       "cls": 0,
       "si": 710
     }
+  },
+  {
+    "commit": "1cb0f25",
+    "date": "2026-04-11T14:09:17.763Z",
+    "mobile": {
+      "performance": 81,
+      "fcp": 1525,
+      "lcp": 1825,
+      "tbt": 735,
+      "cls": 0,
+      "si": 2300
+    },
+    "desktop": {
+      "performance": 99,
+      "fcp": 380,
+      "lcp": 482,
+      "tbt": 104,
+      "cls": 0,
+      "si": 734
+    }
   }
 ]
