@@ -18,7 +18,7 @@ A single-page developer portfolio with cinematic scroll animations, a dark monoc
 | [Three.js](https://threejs.org)                      | 3D wireframe polyhedra in the hero section (lazy-loaded) |
 | [Playwright](https://playwright.dev)                 | End-to-end behavior-based testing (3 device profiles)    |
 | [Vitest](https://vitest.dev)                         | Unit testing for data, config, scripts, and utilities    |
-| [Manrope](https://fonts.google.com/specimen/Manrope) | Geometric sans-serif typeface (300--800 weights)         |
+| [Manrope](https://fonts.google.com/specimen/Manrope) | Self-hosted geometric sans-serif (variable, 300--800)    |
 
 ## Quick Start
 
@@ -136,7 +136,7 @@ The full gradient: `linear-gradient(to right, #cb997e, #ddbea9, #ffe8d6, #b7b7a4
 
 ### Typography
 
-The site uses [Manrope](https://fonts.google.com/specimen/Manrope), a geometric sans-serif, loaded via Google Fonts with `display=swap`.
+The site uses [Manrope](https://fonts.google.com/specimen/Manrope), a geometric sans-serif variable font, self-hosted from `public/fonts/` with `font-display: swap`. Preloaded via `<link rel="preload">` to eliminate render-blocking external requests.
 
 | Weight | Usage                                             |
 | ------ | ------------------------------------------------- |
@@ -316,6 +316,55 @@ The site is optimized for search engines with the following:
 - **Keyboard navigation** -- All interactive elements are focusable with visible focus rings. The mobile menu closes on Escape.
 - **ARIA labels** -- Character-split text preserves the original string in `aria-label`. Social icons and the hamburger button have descriptive labels.
 - **External link security** -- All `target="_blank"` links include `rel="noopener noreferrer"`.
+
+## Performance
+
+Lighthouse scores are tracked automatically on every push via CI. The badge at the top of this README reflects the latest mobile performance score.
+
+| Metric      | Mobile | Desktop |
+| ----------- | ------ | ------- |
+| Performance | 89     | 99      |
+| FCP         | 1.5s   | 0.4s    |
+| LCP         | 1.7s   | 0.4s    |
+| TBT         | 428ms  | 33ms    |
+| CLS         | 0      | 0       |
+
+### Performance strategies
+
+**Zero JS by default.** Astro outputs static HTML. Scripts are only loaded when a component's `<script>` tag is reached -- there is no framework runtime, no client-side router, no hydration overhead.
+
+**Self-hosted fonts.** Manrope is served as a single variable woff2 file from the same origin, preloaded in `<head>`. This eliminates the render-blocking Google Fonts CSS stylesheet and two third-party DNS/TLS round trips that would otherwise delay first paint.
+
+**Lazy-loaded 3D.** Three.js (521KB raw / 109KB brotli) is loaded via dynamic `import()` only after a WebGL capability check. It does not block initial render. The preloader coordinates loading so users see a smooth transition rather than a delayed scene pop-in.
+
+**Code-split by component.** Each component's script is a separate Vite entry point. Only the JS needed for the current viewport is on the critical path. GSAP, ScrollTrigger, and Lenis are bundled together since they initialize at page load; everything else is isolated.
+
+**Brotli compression.** All assets are served with Brotli encoding via Cloudflare, reducing total transfer size by ~75% compared to raw.
+
+### Bundle breakdown
+
+| Chunk         | Raw    | Brotli | Notes                                  |
+| ------------- | ------ | ------ | -------------------------------------- |
+| Three.js      | 521 KB | 109 KB | Lazy-loaded, does not block first load |
+| GSAP core     | 70 KB  | 25 KB  | Scroll animations + timeline engine    |
+| ScrollTrigger | 43 KB  | 16 KB  | GSAP plugin for scroll-driven effects  |
+| Lenis         | 18 KB  | 5 KB   | Smooth scroll library                  |
+| All other JS  | 20 KB  | 8 KB   | Component scripts, theme config, toast |
+| CSS           | 22 KB  | 5 KB   | Tailwind output                        |
+| HTML          | 29 KB  | 5 KB   | Single page                            |
+| Font          | 25 KB  | --     | Manrope variable woff2 (Latin)         |
+
+Total first-load transfer (brotli, excluding Three.js): ~64 KB. With Three.js lazy chunk: ~173 KB.
+
+### Monitoring
+
+Performance is monitored in CI via [Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci):
+
+- Runs on every push to `main` (mobile + desktop, median of 5 runs)
+- Scores are appended to [`performance/lighthouse-history.json`](performance/lighthouse-history.json)
+- Badge auto-updated at [`performance/lighthouse-badge.svg`](performance/lighthouse-badge.svg)
+- Full Lighthouse HTML/JSON reports uploaded as CI artifacts (90-day retention)
+- Detailed audit: [`docs/research/2026-04-11-performance-audit.md`](docs/research/2026-04-11-performance-audit.md)
 
 ## Design Decisions
 
