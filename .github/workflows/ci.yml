@@ -82,7 +82,7 @@ jobs:
         continue-on-error: ${{ !secrets.BADGE_PUSH_TOKEN }}
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
-          commit_message: "chore: update coverage badge"
+          commit_message: "chore: update coverage badge [skip ci]"
           file_pattern: coverage/badge.svg
 
   e2e-tests:
@@ -126,11 +126,11 @@ jobs:
             sleep 1
           done
       - name: Collect Lighthouse (mobile)
-        run: npx lhci collect --url=http://localhost:4321 -n 3
+        run: npx lhci collect --url=http://localhost:4321 -n 5
       - name: Save mobile results
         run: mkdir -p lighthouse-results && cp .lighthouseci/*.json lighthouse-results/
       - name: Collect Lighthouse (desktop)
-        run: npx lhci collect --url=http://localhost:4321 -n 3 --settings.preset=desktop
+        run: npx lhci collect --url=http://localhost:4321 -n 5 --settings.preset=desktop
       - name: Save desktop results
         run: cp .lighthouseci/*.json lighthouse-results/
       - name: Process results
@@ -148,5 +148,5 @@ jobs:
         continue-on-error: ${{ !secrets.BADGE_PUSH_TOKEN }}
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
-          commit_message: "chore: update lighthouse scores"
+          commit_message: "chore: update lighthouse scores [skip ci]"
           file_pattern: "performance/lighthouse-badge.svg performance/lighthouse-history.json"
