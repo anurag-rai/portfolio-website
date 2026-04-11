@@ -1,4 +1,17 @@
-import * as THREE from "three";
+import {
+  BoxGeometry,
+  BufferGeometry,
+  Color,
+  Float32BufferAttribute,
+  IcosahedronGeometry,
+  OctahedronGeometry,
+  PerspectiveCamera,
+  Scene,
+  TetrahedronGeometry,
+  Vector2,
+  Vector3,
+  WebGLRenderer,
+} from "three";
 import { LineMaterial } from "three/addons/lines/LineMaterial.js";
 import { Wireframe } from "three/addons/lines/Wireframe.js";
 import { WireframeGeometry2 } from "three/addons/lines/WireframeGeometry2.js";
@@ -36,22 +49,22 @@ export function initHeroScene(container: HTMLElement) {
     maxShapes,
   } = theme.heroScene;
 
-  const resolution = new THREE.Vector2(container.clientWidth, container.clientHeight);
+  const resolution = new Vector2(container.clientWidth, container.clientHeight);
 
-  const scene = new THREE.Scene();
+  const scene = new Scene();
   const fov = 50;
   const aspect = container.clientWidth / container.clientHeight;
-  const camera = new THREE.PerspectiveCamera(fov, aspect, 0.1, 100);
+  const camera = new PerspectiveCamera(fov, aspect, 0.1, 100);
   camera.position.z = cameraZ;
 
-  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  const renderer = new WebGLRenderer({ alpha: true, antialias: true });
   renderer.setSize(container.clientWidth, container.clientHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   container.appendChild(renderer.domElement);
 
   // Fat line material for wireframe shapes (pixel-width lines, cross-browser)
   const shapeMaterial = new LineMaterial({
-    color: new THREE.Color(wireframeColor).getHex(),
+    color: new Color(wireframeColor).getHex(),
     linewidth: wireframeLineWidth,
     transparent: true,
     opacity: wireframeOpacity,
@@ -60,14 +73,14 @@ export function initHeroScene(container: HTMLElement) {
 
   // --- 7 base polyhedra geometries (4-10 vertices each) ---
 
-  const baseGeometries: THREE.BufferGeometry[] = [
-    new THREE.TetrahedronGeometry(0.45, 0), // 4 points
-    new THREE.BufferGeometry(), // 5 points (triangular bipyramid)
-    new THREE.OctahedronGeometry(0.5, 0), // 6 points
-    new THREE.BufferGeometry(), // 7 points (pentagonal bipyramid)
-    new THREE.BoxGeometry(0.7, 0.7, 0.7), // 8 points (cube)
-    new THREE.BufferGeometry(), // 9 points (elongated prism)
-    new THREE.IcosahedronGeometry(0.55, 0), // 10 points
+  const baseGeometries: BufferGeometry[] = [
+    new TetrahedronGeometry(0.45, 0), // 4 points
+    new BufferGeometry(), // 5 points (triangular bipyramid)
+    new OctahedronGeometry(0.5, 0), // 6 points
+    new BufferGeometry(), // 7 points (pentagonal bipyramid)
+    new BoxGeometry(0.7, 0.7, 0.7), // 8 points (cube)
+    new BufferGeometry(), // 9 points (elongated prism)
+    new IcosahedronGeometry(0.55, 0), // 10 points
   ];
 
   // Build 5-point: triangular bipyramid (two tetrahedra sharing a face)
@@ -75,7 +88,7 @@ export function initHeroScene(container: HTMLElement) {
   const i5 = [0, 2, 3, 0, 3, 4, 0, 4, 2, 1, 3, 2, 1, 4, 3, 1, 2, 4];
   baseGeometries[1].setAttribute(
     "position",
-    new THREE.Float32BufferAttribute(
+    new Float32BufferAttribute(
       i5.flatMap((idx) => [v5[idx * 3], v5[idx * 3 + 1], v5[idx * 3 + 2]]),
       3,
     ),
@@ -96,7 +109,7 @@ export function initHeroScene(container: HTMLElement) {
   }
   baseGeometries[3].setAttribute(
     "position",
-    new THREE.Float32BufferAttribute(
+    new Float32BufferAttribute(
       i7.flatMap((idx) => [v7[idx * 3], v7[idx * 3 + 1], v7[idx * 3 + 2]]),
       3,
     ),
@@ -119,7 +132,7 @@ export function initHeroScene(container: HTMLElement) {
   ];
   baseGeometries[5].setAttribute(
     "position",
-    new THREE.Float32BufferAttribute(
+    new Float32BufferAttribute(
       i9.flatMap((idx) => [v9[idx * 3], v9[idx * 3 + 1], v9[idx * 3 + 2]]),
       3,
     ),
@@ -146,7 +159,7 @@ export function initHeroScene(container: HTMLElement) {
   const smallestDim = Math.min(usableHalfW, usableHalfH);
   const effectiveInnerRadius = spiralInnerRadius * Math.min(1, smallestDim / 2);
 
-  const homePositions: THREE.Vector3[] = [];
+  const homePositions: Vector3[] = [];
   for (let i = 0; i < shapeCount; i++) {
     const angle = i * goldenAngle;
     // sqrt distributes points evenly by area; lerp from inner to outer radius
@@ -156,7 +169,7 @@ export function initHeroScene(container: HTMLElement) {
     const x = Math.cos(angle) * r * usableHalfW;
     const y = Math.sin(angle) * r * usableHalfH;
     const z = Math.sin(i * 3.1) * 0.3;
-    homePositions.push(new THREE.Vector3(x, y, z));
+    homePositions.push(new Vector3(x, y, z));
   }
 
   // Create one WireframeGeometry2 per base type (shared across shapes of same type)
@@ -172,7 +185,7 @@ export function initHeroScene(container: HTMLElement) {
     return {
       mesh: wireframe,
       home,
-      offset: new THREE.Vector2(0, 0),
+      offset: new Vector2(0, 0),
       maxDisplacement: 0.5 + geoIdx * 0.08,
     };
   });
@@ -189,7 +202,7 @@ export function initHeroScene(container: HTMLElement) {
   });
   const connLines = new LineSegments2(connGeo, connMat);
   scene.add(connLines);
-  const baseColor = new THREE.Color(wireframeColor);
+  const baseColor = new Color(wireframeColor);
 
   // Interaction position in world-ish coordinates
   // On desktop: cursor position. On mobile: derived from device tilt.
