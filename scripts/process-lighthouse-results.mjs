@@ -1,10 +1,11 @@
 /**
- * Reads Lighthouse results from .lighthouseci/, generates a performance badge SVG,
+ * Reads Lighthouse results, generates a performance badge SVG,
  * and appends scores to the history JSON file.
  *
  * Usage: node scripts/process-lighthouse-results.mjs
+ * Env:   LHCI_RESULTS_DIR (default: .lighthouseci)
  *
- * Reads:  .lighthouseci/*.json (Lighthouse Result objects)
+ * Reads:  $LHCI_RESULTS_DIR/*.json (Lighthouse Result objects)
  * Writes: performance/lighthouse-badge.svg
  *         performance/lighthouse-history.json
  */
@@ -13,7 +14,7 @@ import { readFileSync, writeFileSync, readdirSync, mkdirSync, existsSync } from 
 import { execSync } from "child_process";
 import { join } from "path";
 
-const RESULTS_DIR = ".lighthouseci";
+const RESULTS_DIR = process.env.LHCI_RESULTS_DIR || ".lighthouseci";
 const OUTPUT_DIR = "performance";
 const BADGE_PATH = join(OUTPUT_DIR, "lighthouse-badge.svg");
 const HISTORY_PATH = join(OUTPUT_DIR, "lighthouse-history.json");
@@ -33,7 +34,7 @@ const results = files
   .filter((r) => r?.categories?.performance);
 
 if (results.length === 0) {
-  console.error("No Lighthouse results found in .lighthouseci/");
+  console.error(`No Lighthouse results found in ${RESULTS_DIR}/`);
   process.exit(1);
 }
 

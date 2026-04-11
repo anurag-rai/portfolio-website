@@ -122,18 +122,25 @@ jobs:
           done
       - name: Collect Lighthouse (mobile)
         run: npx lhci collect --url=http://localhost:4321 -n 3
+      - name: Save mobile results
+        run: mkdir -p lighthouse-results && cp .lighthouseci/*.json lighthouse-results/
       - name: Collect Lighthouse (desktop)
         run: npx lhci collect --url=http://localhost:4321 -n 3 --settings.preset=desktop
+      - name: Save desktop results
+        run: cp .lighthouseci/*.json lighthouse-results/
       - name: Process results
         run: node scripts/process-lighthouse-results.mjs
+        env:
+          LHCI_RESULTS_DIR: lighthouse-results
       - name: Upload Lighthouse reports
         uses: actions/upload-artifact@v7
         with:
           name: lighthouse-reports
-          path: .lighthouseci/
+          path: lighthouse-results/
           retention-days: 90
       - name: Update Lighthouse scores
         if: github.event_name == 'push'
+        continue-on-error: true
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "chore: update lighthouse scores"
