@@ -7,5 +7,6 @@ playwright-report/
 coverage/*
 !coverage/badge.svg
 .lighthouseci/
+lighthouse-results/
 .superpowers/
 .serena/
