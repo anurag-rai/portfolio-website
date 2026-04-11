@@ -33,6 +33,15 @@
 - The unit-tests and lighthouse jobs need `permissions: contents: write` for auto-commit steps.
 - Auto-commit steps (coverage badge, lighthouse scores) require a `BADGE_PUSH_TOKEN` repository secret (Fine-grained PAT with `contents: write` for this repo) to bypass branch protection. Without it, auto-commits silently fail and badges must be committed manually.
 
+## Performance
+
+- Fonts are self-hosted in `public/fonts/` (Manrope variable woff2, Latin subset). Do NOT add Google Fonts `<link>` tags back -- they are render-blocking and add ~800ms to mobile FCP.
+- The `@font-face` rule is in `src/styles/global.css`. The `<link rel="preload">` is in `Layout.astro`.
+- Three.js named imports don't reduce bundle size (521KB raw / 109KB brotli). Three.js has internal side effects that defeat tree-shaking. Replacing Three.js with a lighter library (e.g. ogl) would require a full rewrite of `hero-scene.ts`.
+- Lighthouse CI runs on every push to main (mobile + desktop, median of 5 runs). Scores are in `performance/lighthouse-history.json`, badge in `performance/lighthouse-badge.svg`.
+- `lighthouse-results/` and `.lighthouseci/` are temporary CI directories -- both are in `.gitignore` and `.prettierignore`.
+- CI auto-commit messages include `[skip ci]` to prevent infinite loops (push -> CI -> auto-commit -> push -> CI...).
+
 ## Git
 
 - Commit messages must be a single line. No multi-line bodies, no `Co-Authored-By` trailers.
