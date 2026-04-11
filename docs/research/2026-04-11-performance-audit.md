@@ -300,34 +300,73 @@ equivalent functionality. The bundle size is reasonable for what it delivers.
 
 ## Before vs After comparison
 
-> This section will be filled in after Phase 2 improvements are implemented and the CI runs.
+Before: CI run `24282941348` (commit `45cef66`)
+After: CI run `24283697718` (commit `205a4f0`)
+
+### Changes made
+
+1. **Self-hosted Manrope font**: Downloaded woff2 to `public/fonts/`, replaced Google Fonts
+   `<link rel="stylesheet">` with inline `@font-face` and `<link rel="preload">`.
+   Eliminates render-blocking external CSS and 2 third-party origins.
+2. **Named Three.js imports**: Changed `import * as THREE` to named imports.
+   No bundle size change (Three.js side effects prevent tree-shaking), but better practice.
+3. **CI auto-commit fix**: Updated workflow to use `BADGE_PUSH_TOKEN` for branch protection bypass.
 
 ### Lighthouse CI scores
 
-| Metric      | Before (mobile) | After (mobile) | Delta |
-| ----------- | --------------- | -------------- | ----- |
-| Performance | 85              |                |       |
-| FCP         | 2,286ms         |                |       |
-| LCP         | 2,286ms         |                |       |
-| TBT         | 421ms           |                |       |
-| CLS         | 0.003           |                |       |
-| Speed Index | 2,581ms         |                |       |
+| Metric      | Before (mobile) | After (mobile) | Delta      |
+| ----------- | --------------- | -------------- | ---------- |
+| Performance | 85              | **89**         | **+4**     |
+| FCP         | 2,286ms         | **1,480ms**    | **-806ms** |
+| LCP         | 2,286ms         | **1,729ms**    | **-557ms** |
+| TBT         | 421ms           | 428ms          | +7ms       |
+| CLS         | 0.003           | **0**          | **-0.003** |
+| Speed Index | 2,581ms         | **2,318ms**    | **-263ms** |
 
-| Metric      | Before (desktop) | After (desktop) | Delta |
-| ----------- | ---------------- | --------------- | ----- |
-| Performance | 99               |                 |       |
-| FCP         | 638ms            |                 |       |
-| LCP         | 638ms            |                 |       |
-| TBT         | 33ms             |                 |       |
-| CLS         | 0.003            |                 |       |
-| Speed Index | 788ms            |                 |       |
+| Metric      | Before (desktop) | After (desktop) | Delta      |
+| ----------- | ---------------- | --------------- | ---------- |
+| Performance | 99               | 99              | 0          |
+| FCP         | 638ms            | **374ms**       | **-264ms** |
+| LCP         | 638ms            | **439ms**       | **-199ms** |
+| TBT         | 33ms             | 99ms            | +66ms      |
+| CLS         | 0.003            | **0**           | **-0.003** |
+| Speed Index | 788ms            | **724ms**       | **-64ms**  |
+
+### Analysis
+
+**Mobile Performance: 85 -> 89 (+4 points)**
+
+The biggest win is FCP: **806ms faster**. Eliminating the render-blocking Google Fonts CSS
+meant the browser no longer waits for a third-party stylesheet before first paint.
+LCP also improved by 557ms for the same reason — the text-based LCP element renders
+with the locally preloaded font.
+
+CLS dropped to 0 (perfect) — the preloaded self-hosted font reduces flash of unstyled text.
+
+TBT stayed roughly the same (+7ms, within noise). This is expected because TBT is dominated
+by Three.js parse/compile, which was not changed.
+
+**Desktop: 99 -> 99 (unchanged)**
+
+Desktop was already near-perfect. FCP improved 264ms (more headroom below the threshold).
+TBT increased 66ms but remained well under the 200ms "good" threshold.
 
 ### Build output
 
-| Metric                     | Before  | After | Delta |
-| -------------------------- | ------- | ----- | ----- |
-| Total JS (brotli)          | 163,349 |       |       |
-| Total CSS (brotli)         | 4,504   |       |       |
-| Total page weight (brotli) | 173,269 |       |       |
-| hero-scene chunk (brotli)  | 109,423 |       |       |
-| Request count              | 22–27   |       |       |
+| Metric                      | Before  | After   | Delta                           |
+| --------------------------- | ------- | ------- | ------------------------------- |
+| Total JS (brotli)           | 163,349 | 163,349 | 0 (Three.js tree-shaking N/A)   |
+| Total CSS (brotli)          | 4,504   | 4,663   | +159 (@font-face rule added)    |
+| HTML (brotli)               | 5,416   | 5,396   | -20 (removed Google Fonts link) |
+| hero-scene chunk (brotli)   | 109,423 | 109,423 | 0                               |
+| Font file (self-hosted)     | 0       | 24,576  | +24,576 (was external)          |
+| Request count (same-origin) | 18      | 19      | +1 (font file now same-origin)  |
+| Third-party origins         | 2       | 0       | **-2** (eliminated)             |
+
+### Remaining opportunities
+
+- **Three.js bundle (109KB brotli)**: Named imports didn't help due to Three.js side effects.
+  To reduce further, would need to replace Three.js with a lighter 3D library (significant rewrite).
+- **Cache headers**: `max-age=10` on hashed assets. Requires Cloudflare/DO config (not code).
+- **TBT on mobile (428ms)**: Dominated by Three.js parse/compile. Could defer script execution
+  further or reduce geometry complexity.
