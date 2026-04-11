@@ -118,5 +118,25 @@
       "cls": 0,
       "si": 734
     }
+  },
+  {
+    "commit": "aa67360",
+    "date": "2026-04-11T16:42:11.050Z",
+    "mobile": {
+      "performance": 81,
+      "fcp": 1522,
+      "lcp": 1828,
+      "tbt": 756,
+      "cls": 0,
+      "si": 2362
+    },
+    "desktop": {
+      "performance": 99,
+      "fcp": 378,
+      "lcp": 444,
+      "tbt": 109,
+      "cls": 0,
+      "si": 733
+    }
   }
 ]
