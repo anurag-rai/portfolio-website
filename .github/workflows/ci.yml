@@ -99,3 +99,42 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npm run test -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+
+  lighthouse:
+    name: Lighthouse
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Start preview server
+        run: npm run preview &
+      - name: Wait for server
+        run: |
+          until curl -sf http://localhost:4321 > /dev/null 2>&1; do
+            sleep 1
+          done
+      - name: Collect Lighthouse (mobile)
+        run: npx lhci collect --url=http://localhost:4321 -n 3
+      - name: Collect Lighthouse (desktop)
+        run: npx lhci collect --url=http://localhost:4321 -n 3 --settings.preset=desktop
+      - name: Process results
+        run: node scripts/process-lighthouse-results.mjs
+      - name: Upload Lighthouse reports
+        uses: actions/upload-artifact@v7
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci/
+          retention-days: 90
+      - name: Update Lighthouse scores
+        if: github.event_name == 'push'
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: "chore: update lighthouse scores"
+          file_pattern: "performance/lighthouse-badge.svg performance/lighthouse-history.json"

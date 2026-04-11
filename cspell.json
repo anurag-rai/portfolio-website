@@ -49,7 +49,10 @@
     "vite",
     "WCAG",
     "wireframe",
-    "unstub"
+    "unstub",
+    "lhci",
+    "autorun",
+    "lighthouseci"
   ],
   "ignorePaths": [
     "node_modules",
