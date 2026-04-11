@@ -1,0 +1,22 @@
+[
+  {
+    "commit": "45cef66",
+    "date": "2026-04-11T12:58:52.000Z",
+    "mobile": {
+      "performance": 85,
+      "fcp": 2286,
+      "lcp": 2286,
+      "tbt": 421,
+      "cls": 0.003,
+      "si": 2581
+    },
+    "desktop": {
+      "performance": 99,
+      "fcp": 638,
+      "lcp": 638,
+      "tbt": 33,
+      "cls": 0.003,
+      "si": 788
+    }
+  }
+]

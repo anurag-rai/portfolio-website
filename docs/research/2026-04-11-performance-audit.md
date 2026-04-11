@@ -54,30 +54,29 @@ Not available. CrUX requires sufficient traffic volume to report data. As a pers
 
 ## Baseline: Lighthouse CI scores
 
-> These scores will be populated from the first CI run after the Lighthouse job is pushed to main.
-> The CI run number and commit hash will be recorded here for reference.
+CI run: `24282941348` (commit `45cef66`, 2026-04-11)
 
-### Mobile
+### Mobile (median of 3 runs)
 
-| Metric      | Score            | Notes |
-| ----------- | ---------------- | ----- |
-| Performance | _pending CI run_ |       |
-| FCP         | _pending_        |       |
-| LCP         | _pending_        |       |
-| TBT         | _pending_        |       |
-| CLS         | _pending_        |       |
-| Speed Index | _pending_        |       |
+| Metric      | Score   | Notes                                           |
+| ----------- | ------- | ----------------------------------------------- |
+| Performance | **85**  | Yellow range (75-89)                            |
+| FCP         | 2,286ms | First paint delayed by render-blocking font CSS |
+| LCP         | 2,286ms | Same element as FCP (text-based LCP)            |
+| TBT         | 421ms   | Three.js parse/compile on throttled mobile CPU  |
+| CLS         | 0.003   | Excellent — near zero layout shift              |
+| Speed Index | 2,581ms | Consistent with FCP delay                       |
 
-### Desktop
+### Desktop (median of 3 runs)
 
-| Metric      | Score            | Notes |
-| ----------- | ---------------- | ----- |
-| Performance | _pending CI run_ |       |
-| FCP         | _pending_        |       |
-| LCP         | _pending_        |       |
-| TBT         | _pending_        |       |
-| CLS         | _pending_        |       |
-| Speed Index | _pending_        |       |
+| Metric      | Score  | Notes                               |
+| ----------- | ------ | ----------------------------------- |
+| Performance | **99** | Near-perfect on unthrottled desktop |
+| FCP         | 638ms  | Fast — no CPU/network throttling    |
+| LCP         | 638ms  | Same element as FCP                 |
+| TBT         | 33ms   | Minimal blocking — fast CPU         |
+| CLS         | 0.003  | Same as mobile — layout is stable   |
+| Speed Index | 788ms  | Fast visual progression             |
 
 ---
 
@@ -307,21 +306,21 @@ equivalent functionality. The bundle size is reasonable for what it delivers.
 
 | Metric      | Before (mobile) | After (mobile) | Delta |
 | ----------- | --------------- | -------------- | ----- |
-| Performance | _pending_       |                |       |
-| FCP         | _pending_       |                |       |
-| LCP         | _pending_       |                |       |
-| TBT         | _pending_       |                |       |
-| CLS         | _pending_       |                |       |
-| Speed Index | _pending_       |                |       |
+| Performance | 85              |                |       |
+| FCP         | 2,286ms         |                |       |
+| LCP         | 2,286ms         |                |       |
+| TBT         | 421ms           |                |       |
+| CLS         | 0.003           |                |       |
+| Speed Index | 2,581ms         |                |       |
 
 | Metric      | Before (desktop) | After (desktop) | Delta |
 | ----------- | ---------------- | --------------- | ----- |
-| Performance | _pending_        |                 |       |
-| FCP         | _pending_        |                 |       |
-| LCP         | _pending_        |                 |       |
-| TBT         | _pending_        |                 |       |
-| CLS         | _pending_        |                 |       |
-| Speed Index | _pending_        |                 |       |
+| Performance | 99               |                 |       |
+| FCP         | 638ms            |                 |       |
+| LCP         | 638ms            |                 |       |
+| TBT         | 33ms             |                 |       |
+| CLS         | 0.003            |                 |       |
+| Speed Index | 788ms            |                 |       |
 
 ### Build output
 
