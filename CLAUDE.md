@@ -13,6 +13,14 @@
 - `.astro` components do NOT support `client:load`, `client:media`, or other `client:` directives. Those only work with framework components (React, Svelte, etc.). Use inline `<script>` tags with dynamic `import()` for conditional loading.
 - `define:vars` scripts are inline and cannot use ES module imports. Use CSS transitions or pass data via `data-` attributes for client-side behavior that needs config values.
 
+## Performance
+
+- Fonts are self-hosted in `public/fonts/` (Manrope variable woff2, Latin subset). Do NOT add Google Fonts `<link>` tags -- they are render-blocking and add ~800ms to mobile FCP.
+- Three.js cannot be tree-shaken due to internal side effects. Named imports are used for readability but do not reduce bundle size. The hero-scene chunk is ~521KB raw / ~109KB brotli and is lazy-loaded via dynamic `import()`.
+- Lighthouse CI runs on every push to main (mobile + desktop, median of 5 runs). Scores are auto-committed to `performance/lighthouse-history.json` and `performance/lighthouse-badge.svg`.
+- `.lighthouseci/` and `lighthouse-results/` are temporary CI working directories -- they are in `.gitignore` and `.prettierignore`.
+- CI auto-commit messages include `[skip ci]` to prevent infinite trigger loops.
+
 ## Inline Styles
 
 - When writing inline styles via `element.style.cssText`, use CSS property syntax (e.g. `pointer-events: none`), NOT Tailwind class names (e.g. `pointer-events-none`). Tailwind classes are only valid in HTML `class` attributes.
@@ -32,15 +40,6 @@
 - After pushing changes that affect CI, monitor the run with `gh run watch` before moving on.
 - The unit-tests and lighthouse jobs need `permissions: contents: write` for auto-commit steps.
 - Auto-commit steps (coverage badge, lighthouse scores) require a `BADGE_PUSH_TOKEN` repository secret (Fine-grained PAT with `contents: write` for this repo) to bypass branch protection. Without it, auto-commits silently fail and badges must be committed manually.
-
-## Performance
-
-- Fonts are self-hosted in `public/fonts/` (Manrope variable woff2, Latin subset). Do NOT add Google Fonts `<link>` tags back -- they are render-blocking and add ~800ms to mobile FCP.
-- The `@font-face` rule is in `src/styles/global.css`. The `<link rel="preload">` is in `Layout.astro`.
-- Three.js named imports don't reduce bundle size (521KB raw / 109KB brotli). Three.js has internal side effects that defeat tree-shaking. Replacing Three.js with a lighter library (e.g. ogl) would require a full rewrite of `hero-scene.ts`.
-- Lighthouse CI runs on every push to main (mobile + desktop, median of 5 runs). Scores are in `performance/lighthouse-history.json`, badge in `performance/lighthouse-badge.svg`.
-- `lighthouse-results/` and `.lighthouseci/` are temporary CI directories -- both are in `.gitignore` and `.prettierignore`.
-- CI auto-commit messages include `[skip ci]` to prevent infinite loops (push -> CI -> auto-commit -> push -> CI...).
 
 ## Git
 
